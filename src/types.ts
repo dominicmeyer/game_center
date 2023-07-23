@@ -113,8 +113,8 @@ export class GameStorage {
         return this.store.create()
     }
 
-    async add(value: Game) {
-        await this.set(value.signature(), value)
+    add(value: Game) {
+        return this.set(value.signature(), value)
     }
 
     async getGames(type?: GameType) {
