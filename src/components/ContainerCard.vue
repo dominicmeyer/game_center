@@ -8,7 +8,7 @@
         <ion-card-content :key="contentKey">
             <p>Runde: {{ lastRound }}</p>
             <p v-for="score in latestScore">{{ score.getPlayer().getName() }}: {{ score.getScore() }}
-                <input type="text" :id="inputId + '.' + score.getPlayer().getName()">
+                <input type="number" :id="inputId + '.' + score.getPlayer().getName()">
                 <Button :type="ButtonType.Add"
                     @click="addToPlayerScore(inputId + '.' + score.getPlayer().getName(), score.getPlayer())" />
             </p>
@@ -23,7 +23,7 @@
         <input type="text" :id="inputId" placeholder="Spieler-Name">
 
         <Button :type="ButtonType.Close" @click="closePlayerDialog()" />
-        <Button :type="ButtonType.Save" @click="submitPlayerDialog()" />
+        <Button :type="ButtonType.Save" @click="addPlayer()" />
     </dialog>
 </template>
   
@@ -67,7 +67,7 @@ export default defineComponent({
             dialogElement.close()
             this.contentKey++
         },
-        async submitPlayerDialog() {
+        async addPlayer() {
             const playerNameElement = document.getElementById(this.inputId) as HTMLInputElement
             this.$emit("addPlayer", playerNameElement.value, this.game)
             this.closePlayerDialog()
