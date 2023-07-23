@@ -72,10 +72,10 @@ export class Game {
     }
 
     getPlayerScores(player: Player) {
-        return this.getScores().filter((s) => s.getPlayer().equals(player))
+        return this.getScores().filter((s: Score) => s.getPlayer().equals(player))
     }
 
-    getPlayerLatestRound(player: Player) {
+    getPlayerLatestScore(player: Player) {
         return this.getPlayerScores(player).reduce((acc, s) => acc.getRound() > s.getRound() ? acc : s)
     }
 
@@ -150,7 +150,7 @@ export class GameStorage {
             return
         }
 
-        const latestScore = updatedGame.getPlayerLatestRound(player)
+        const latestScore = updatedGame.getPlayerLatestScore(player)
         const newScore = latestScore!.getScore() + scoreToAdd
         const newRound = latestScore!.getRound() + 1
         updatedGame.addToPlayerScore(player, newRound, newScore)
@@ -164,7 +164,13 @@ export class GameStorage {
 
     private async get(key: string) {
         const game = await this.store.get(key)
-        return new Game(game.type, game.gameNumber, game.scores)
+        let scores: Score[] = []
+
+        for (const score of game.scores) {
+            scores.push(new Score(new Player(score.player.name),score.score,score.round))
+        }
+
+        return new Game(game.type, game.gameNumber, scores)
     }
 
     private set(key: string, value: Game) {
