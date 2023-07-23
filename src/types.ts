@@ -135,15 +135,10 @@ export class GameStorage {
     }
 
     async addPlayer(playerName: string, game: Game) {
-        const keys = await this.keys()
-
-        for (const key of keys) {
-            if ((await this.get(key)).equals(game)) {
-                const updatedGame = await this.get(key)
-                updatedGame.addPlayer(playerName)
-                await this.set(key, updatedGame)
-            }
-        }
+        const key = game.signature()
+        const updatedGame = await this.get(key)
+        updatedGame.addPlayer(playerName)
+        await this.set(key, updatedGame)
     }
 
     async addToPlayerScore(scoreToAdd: number, player: Player, game: Game) {
@@ -159,7 +154,7 @@ export class GameStorage {
         const newScore = latestScore!.getScore() + scoreToAdd
         const newRound = latestScore!.getRound() + 1
         updatedGame.addToPlayerScore(player, newRound, newScore)
-        
+
         await this.set(key, updatedGame)
     }
 
