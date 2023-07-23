@@ -17,14 +17,26 @@ export class Player {
 }
 
 export class Score {
-    player: Player
-    score: number
-    round: number
+    private player: Player
+    private score: number
+    private round: number
 
     constructor(player: Player, score?: number, round?: number) {
         this.player = player
         this.score = score == null ? 0 : score
         this.round = round == null ? 1 : round
+    }
+
+    getPlayer() {
+        return this.player
+    }
+
+    getScore() {
+        return this.score
+    }
+
+    getRound() {
+        return this.round
     }
 }
 
@@ -135,8 +147,8 @@ export class GameStorage {
         for (const key of keys) {
             if ((await this.get(key)).equals(game)) {
                 const updatedGame = await this.get(key)
-                const latestScore = updatedGame.scores.reduce((acc, s) => s.player.getName() != playerName ? acc : acc == null ? s : acc.round > s.round ? acc : s)
-                updatedGame.addToPlayerScore(playerName, latestScore!.round + 1, latestScore!.score + newScore)
+                const latestScore = updatedGame.scores.reduce((acc, s) => s.getPlayer().getName() != playerName ? acc : acc == null ? s : acc.getRound() > s.getRound() ? acc : s)
+                updatedGame.addToPlayerScore(playerName, latestScore!.getRound() + 1, latestScore!.getScore() + newScore)
                 await this.set(key, updatedGame)
             }
         }

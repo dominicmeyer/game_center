@@ -81,8 +81,8 @@ export default defineComponent({
       await this.qwirkleStore.addToPlayerScore(newScore, playerName, game)
       this.gamesPlayed = this.gamesPlayed.map((g) => {
         if (g.equals(game)) {
-          const latestScore = this.gamesPlayed.find((g) => g.equals(game))?.scores.reduce((acc, s) => s.player.getName() != playerName ? acc : acc == null ? s : acc.round > s.round ? acc : s)
-          g.addToPlayerScore(playerName, latestScore!.round + 1, latestScore!.score + newScore)
+          const latestScore = this.gamesPlayed.find((g) => g.equals(game))?.scores.reduce((acc, s) => s.getPlayer().getName() != playerName ? acc : acc == null ? s : acc.getRound() > s.getRound() ? acc : s)
+          g.addToPlayerScore(playerName, latestScore!.getRound() + 1, latestScore!.getScore() + newScore)
         }
         return g
       })

@@ -7,9 +7,9 @@
 
         <ion-card-content :key="contentKey">
             <p>Runde: {{ lastRound }}</p>
-            <p v-for="score in latestScore">{{ score.player.getName() }}: {{ score.score }}
-                <input type="text" :id="inputId + '.' + score.player.getName()">
-                <Button :type="ButtonType.Add" @click="addToPlayerScore(inputId + '.' + score.player.getName(), score.player.getName())" />
+            <p v-for="score in latestScore">{{ score.getPlayer().getName() }}: {{ score.getScore() }}
+                <input type="text" :id="inputId + '.' + score.getPlayer().getName()">
+                <Button :type="ButtonType.Add" @click="addToPlayerScore(inputId + '.' + score.getPlayer().getName(), score.getPlayer().getName())" />
             </p>
 
             <Button :type="ButtonType.Delete" @click="deleteFunction(game)" />
@@ -76,25 +76,25 @@ export default defineComponent({
         }
     },
     setup(props) {
-        const scores: Score[] = props.game!.scores.sort((a, b) => a.player.getName().localeCompare(b.player.getName()))
+        const scores: Score[] = props.game!.scores.sort((a, b) => a.getPlayer().getName().localeCompare(b.getPlayer().getName()))
 
-        const vsText: string | undefined = scores.filter((s) => s.round == 1).map((s) => s.player.getName()).reduce((acc, p, i) => {
+        const vsText: string | undefined = scores.filter((s) => s.getRound() == 1).map((s) => s.getPlayer().getName()).reduce((acc, p, i) => {
             return i == 0 ? p : acc + " vs " + p
         }, "")
 
-        const lastRound: number = scores.map((s) => s.round).reduce((max, r) => max > r ? max : r, 1)
+        const lastRound: number = scores.map((s) => s.getRound()).reduce((max, r) => max > r ? max : r, 1)
 
         let players: Player[] = []
 
         for (const score of scores) {
-            if (players.find((p) => p.getName() == score.player.getName()) == undefined) {
-                players.push(score.player)
+            if (players.find((p) => p.getName() == score.getPlayer().getName()) == undefined) {
+                players.push(score.getPlayer())
             }
         }
 
         const latestScore: Score[] = players.map((p) => {
-            const maxRound = scores.filter((s) => s.player.getName() == p.getName()).reduce((acc,s) => acc > s.round ? acc : s.round, 1)
-            return scores.find((s) => s.round == maxRound && s.player.getName() == p.getName())!
+            const maxRound = scores.filter((s) => s.getPlayer().getName() == p.getName()).reduce((acc,s) => acc > s.getRound() ? acc : s.getRound(), 1)
+            return scores.find((s) => s.getRound() == maxRound && s.getPlayer().getName() == p.getName())!
         })
 
         const inputId = props.game.gameNumber.toString() + "." + props.game.type.toString() + ".input"
