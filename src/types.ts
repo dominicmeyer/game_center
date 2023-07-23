@@ -105,13 +105,8 @@ export class GameStorage {
         return this.store.create()
     }
 
-    private set(key: number, value: Game) {
-        return this.store.set(key.toString(), value)
-    }
-
     async add(value: Game) {
-        const newId = await this.newId()
-        await this.set(newId, value)
+        await this.set(value.signature(), value)
     }
 
     async getGames(type?: GameType) {
@@ -129,20 +124,6 @@ export class GameStorage {
         }
 
         return games
-    }
-
-    private async keys() {
-        const keys = await this.store.keys()
-        return keys.map((k) => parseInt(k))
-    }
-
-    async get(key: number): Promise<Game> {
-        const game = await this.store.get(key.toString())
-        return new Game(game.type, game.gameNumber, game.scores)
-    }
-
-    private async newId() {
-        return (await this.keys()).reduce((max, k) => max > k ? max : k, 1) + 1
     }
 
     async addPlayer(playerName: string, game: Game) {
@@ -178,5 +159,18 @@ export class GameStorage {
                 await this.store.remove(key.toString())
             }
         }
+    }
+
+    private async get(key: string) {
+        const game = await this.store.get(key)
+        return new Game(game.type, game.gameNumber, game.scores)
+    }
+
+    private set(key: string, value: Game) {
+        return this.store.set(key.toString(), value)
+    }
+
+    private async keys() {
+        return this.store.keys()
     }
 }
