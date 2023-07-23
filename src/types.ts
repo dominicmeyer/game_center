@@ -183,7 +183,7 @@ export class GameStorage {
         let scores: Score[] = []
 
         for (const score of game.scores) {
-            scores.push(new Score(new Player(score.player.name),score.score,score.round))
+            scores.push(new Score(new Player(score.player.name), score.score, score.round))
         }
 
         return new Game(game.type, game.gameNumber, scores)
