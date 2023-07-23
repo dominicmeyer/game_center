@@ -152,13 +152,7 @@ export class GameStorage {
     }
 
     async remove(game: Game) {
-        const keys = await this.keys()
-
-        for (const key of keys) {
-            if ((await this.get(key)).equals(game)) {
-                await this.store.remove(key.toString())
-            }
-        }
+        return this.store.remove(game.signature())
     }
 
     private async get(key: string) {
