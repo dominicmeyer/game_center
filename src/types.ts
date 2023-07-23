@@ -75,8 +75,10 @@ export class Game {
         return this.getScores().filter((s: Score) => s.getPlayer().equals(player))
     }
 
-    getPlayerLatestScore(player: Player) {
-        return this.getPlayerScores(player).reduce((acc, s) => acc.getRound() > s.getRound() ? acc : s)
+    getLatestScore(player?: Player) {
+        const scores = player != null ? this.getPlayerScores(player) : this.getScores()
+
+        return scores.reduce((acc, s) => acc.getRound() > s.getRound() ? acc : s)
     }
 
     getPlayers() {
@@ -164,7 +166,7 @@ export class GameStorage {
             return
         }
 
-        const latestScore = updatedGame.getPlayerLatestScore(player)
+        const latestScore = updatedGame.getLatestScore(player)
         const newScore = latestScore!.getScore() + scoreToAdd
         const newRound = latestScore!.getRound() + 1
         updatedGame.addToPlayerScore(player, newRound, newScore)

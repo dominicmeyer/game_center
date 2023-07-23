@@ -81,17 +81,9 @@ export default defineComponent({
     setup(props) {
         const scores: Score[] = props.game.getScores().sort((a, b) => a.getPlayer().getName().localeCompare(b.getPlayer().getName()))
 
-        const vsText: string = props.game.getVsText()
-
-        const lastRound: number = scores.map((s) => s.getRound()).reduce((max, r) => max > r ? max : r, 1)
-
-        let players: Player[] = []
-
-        for (const score of scores) {
-            if (players.find((p) => p.getName() == score.getPlayer().getName()) == undefined) {
-                players.push(score.getPlayer())
-            }
-        }
+        const vsText = props.game.getVsText()
+        const players = props.game.getPlayers()
+        const lastRound = props.game.getLatestScore().getRound()
 
         const latestScore: Score[] = players.map((p) => {
             const maxRound = scores.filter((s) => s.getPlayer().getName() == p.getName()).reduce((acc, s) => acc > s.getRound() ? acc : s.getRound(), 1)
