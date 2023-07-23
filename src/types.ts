@@ -51,8 +51,12 @@ export class Game {
         this.gameNumber = gameNumber
     }
 
-    equals(game: Game) {
-        return this.type == game.type && this.gameNumber == game.gameNumber
+    signature() {
+        return `${this.type}.${this.gameNumber}`
+    }
+
+    equals(otherGame: Game) {
+        return this.signature() == otherGame.signature()
     }
 
     addPlayer(name: string) {
