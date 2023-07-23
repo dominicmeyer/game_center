@@ -1,10 +1,14 @@
 import { Storage } from "@ionic/storage"
 
 export class Player {
-    name: string
+    private name: string
 
     constructor(name: string) {
         this.name = name
+    }
+
+    getName() {
+        return this.name
     }
 }
 
@@ -127,7 +131,7 @@ export class GameStorage {
         for (const key of keys) {
             if ((await this.get(key)).equals(game)) {
                 const updatedGame = await this.get(key)
-                const latestScore = updatedGame.scores.reduce((acc, s) => s.player.name != playerName ? acc : acc == null ? s : acc.round > s.round ? acc : s)
+                const latestScore = updatedGame.scores.reduce((acc, s) => s.player.getName() != playerName ? acc : acc == null ? s : acc.round > s.round ? acc : s)
                 updatedGame.addToPlayerScore(playerName, latestScore!.round + 1, latestScore!.score + newScore)
                 await this.set(key, updatedGame)
             }
