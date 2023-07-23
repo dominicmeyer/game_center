@@ -79,6 +79,20 @@ export class Game {
         return this.getPlayerScores(player).reduce((acc, s) => acc.getRound() > s.getRound() ? acc : s)
     }
 
+    getPlayers() {
+        let players: Set<Player> = new Set()
+
+        this.getScores().forEach((s) => players.add(s.getPlayer()))
+
+        return Array.from(players).sort((a, b) => a.getName().localeCompare(b.getName()))
+    }
+
+    getVsText() {
+        return this.getPlayers().reduce((acc, p, i) => {
+            return i == 0 ? p.getName() : `${acc} vs ${p.getName()}`
+        }, "")
+    }
+
     addPlayer(name: string) {
         this.scores.push(new Score(new Player(name)))
     }
