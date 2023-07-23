@@ -41,9 +41,9 @@ export class Score {
 }
 
 export class Game {
-    type: GameType
-    gameNumber: number
-    scores: Score[]
+    private type: GameType
+    private gameNumber: number
+    private scores: Score[]
 
     constructor(type: GameType, gameNumber: number, scores: Score[]) {
         this.type = type
@@ -57,6 +57,18 @@ export class Game {
 
     equals(otherGame: Game) {
         return this.signature() == otherGame.signature()
+    }
+
+    getType() {
+        return this.type
+    }
+
+    getGameNumber() {
+        return this.gameNumber
+    }
+
+    getScores() {
+        return this.scores
     }
 
     addPlayer(name: string) {
@@ -109,7 +121,7 @@ export class GameStorage {
         for (const key of keys) {
             const game = await this.get(key)
 
-            if (type != null && game.type != type) {
+            if (type != null && game.getType() != type) {
                 continue
             }
 
@@ -151,7 +163,7 @@ export class GameStorage {
         for (const key of keys) {
             if ((await this.get(key)).equals(game)) {
                 const updatedGame = await this.get(key)
-                const latestScore = updatedGame.scores.reduce((acc, s) => s.getPlayer().getName() != playerName ? acc : acc == null ? s : acc.getRound() > s.getRound() ? acc : s)
+                const latestScore = updatedGame.getScores().reduce((acc, s) => s.getPlayer().getName() != playerName ? acc : acc == null ? s : acc.getRound() > s.getRound() ? acc : s)
                 updatedGame.addToPlayerScore(playerName, latestScore!.getRound() + 1, latestScore!.getScore() + newScore)
                 await this.set(key, updatedGame)
             }

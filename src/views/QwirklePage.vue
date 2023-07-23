@@ -60,7 +60,7 @@ export default defineComponent({
       await this.qwirkleStore.add(newGame)
     },
     sortGames(): QwirkleGame[] {
-      return this.gamesPlayed.sort((a, b) => b.gameNumber - a.gameNumber)
+      return this.gamesPlayed.sort((a, b) => b.getGameNumber() - a.getGameNumber())
     },
     async deleteGame(game: Game) {
       await this.qwirkleStore.remove(game)
@@ -81,7 +81,7 @@ export default defineComponent({
       await this.qwirkleStore.addToPlayerScore(newScore, playerName, game)
       this.gamesPlayed = this.gamesPlayed.map((g) => {
         if (g.equals(game)) {
-          const latestScore = this.gamesPlayed.find((g) => g.equals(game))?.scores.reduce((acc, s) => s.getPlayer().getName() != playerName ? acc : acc == null ? s : acc.getRound() > s.getRound() ? acc : s)
+          const latestScore = this.gamesPlayed.find((g) => g.equals(game))?.getScores().reduce((acc, s) => s.getPlayer().getName() != playerName ? acc : acc == null ? s : acc.getRound() > s.getRound() ? acc : s)
           g.addToPlayerScore(playerName, latestScore!.getRound() + 1, latestScore!.getScore() + newScore)
         }
         return g

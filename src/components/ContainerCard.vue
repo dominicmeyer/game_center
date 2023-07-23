@@ -2,7 +2,7 @@
     <ion-card>
         <ion-card-header>
             <ion-card-title>{{ vsText }}</ion-card-title>
-            <ion-card-subtitle>Spiel-Nr.: {{ game?.gameNumber }}</ion-card-subtitle>
+            <ion-card-subtitle>Spiel-Nr.: {{ game?.getGameNumber() }}</ion-card-subtitle>
         </ion-card-header>
 
         <ion-card-content :key="contentKey">
@@ -76,7 +76,7 @@ export default defineComponent({
         }
     },
     setup(props) {
-        const scores: Score[] = props.game!.scores.sort((a, b) => a.getPlayer().getName().localeCompare(b.getPlayer().getName()))
+        const scores: Score[] = props.game!.getScores().sort((a, b) => a.getPlayer().getName().localeCompare(b.getPlayer().getName()))
 
         const vsText: string | undefined = scores.filter((s) => s.getRound() == 1).map((s) => s.getPlayer().getName()).reduce((acc, p, i) => {
             return i == 0 ? p : acc + " vs " + p
@@ -97,8 +97,8 @@ export default defineComponent({
             return scores.find((s) => s.getRound() == maxRound && s.getPlayer().getName() == p.getName())!
         })
 
-        const inputId = props.game.gameNumber.toString() + "." + props.game.type.toString() + ".input"
-        const dialogId = props.game.gameNumber.toString() + "." + props.game.type.toString() + ".dialog"
+        const inputId = props.game.getGameNumber().toString() + "." + props.game.getType().toString() + ".input"
+        const dialogId = props.game.getGameNumber().toString() + "." + props.game.getType().toString() + ".dialog"
         const dialogOpened = false
 
         const contentKey = ref(0)
