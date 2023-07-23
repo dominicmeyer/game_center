@@ -10,6 +10,10 @@ export class Player {
     getName() {
         return this.name
     }
+
+    equals(otherPlayer: Player) {
+        return this.name == otherPlayer.name
+    }
 }
 
 export class Score {
