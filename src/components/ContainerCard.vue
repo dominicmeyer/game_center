@@ -84,11 +84,7 @@ export default defineComponent({
         const vsText = props.game.getVsText()
         const players = props.game.getPlayers()
         const lastRound = props.game.getLatestScore().getRound()
-
-        const latestScore: Score[] = players.map((p) => {
-            const maxRound = scores.filter((s) => s.getPlayer().getName() == p.getName()).reduce((acc, s) => acc > s.getRound() ? acc : s.getRound(), 1)
-            return scores.find((s) => s.getRound() == maxRound && s.getPlayer().getName() == p.getName())!
-        })
+        const latestScore: Score[] = players.map((p) => props.game.getLatestScore(p))
 
         const inputId = props.game.getGameNumber().toString() + "." + props.game.getType().toString() + ".input"
         const dialogId = props.game.getGameNumber().toString() + "." + props.game.getType().toString() + ".dialog"
