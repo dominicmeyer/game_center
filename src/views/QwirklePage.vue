@@ -29,7 +29,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonIt
 import ContainerCard from '@/components/ContainerCard.vue';
 import Button from '@/components/Button.vue';
 import { ButtonType } from '@/components/Button.vue';
-import { QwirkleGame, GameStorage, Game } from '@/types';
+import { QwirkleGame, GameStorage, Game, Player } from '@/types';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -77,12 +77,12 @@ export default defineComponent({
       })
       this.listKey++
     },
-    async addToPlayerScore(newScore: number, playerName: string, game: Game) {
-      await this.qwirkleStore.addToPlayerScore(newScore, playerName, game)
+    async addToPlayerScore(newScore: number, player: Player, game: Game) {
+      await this.qwirkleStore.addToPlayerScore(newScore, player, game)
       this.gamesPlayed = this.gamesPlayed.map((g) => {
         if (g.equals(game)) {
-          const latestScore = this.gamesPlayed.find((g) => g.equals(game))?.getScores().reduce((acc, s) => s.getPlayer().getName() != playerName ? acc : acc == null ? s : acc.getRound() > s.getRound() ? acc : s)
-          g.addToPlayerScore(playerName, latestScore!.getRound() + 1, latestScore!.getScore() + newScore)
+          const latestScore = this.gamesPlayed.find((g) => g.equals(game))?.getScores().reduce((acc, s) => s.getPlayer().equals(player) ? acc : acc == null ? s : acc.getRound() > s.getRound() ? acc : s)
+          g.addToPlayerScore(player, latestScore!.getRound() + 1, latestScore!.getScore() + newScore)
         }
         return g
       })

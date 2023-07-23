@@ -9,7 +9,7 @@
             <p>Runde: {{ lastRound }}</p>
             <p v-for="score in latestScore">{{ score.getPlayer().getName() }}: {{ score.getScore() }}
                 <input type="text" :id="inputId + '.' + score.getPlayer().getName()">
-                <Button :type="ButtonType.Add" @click="addToPlayerScore(inputId + '.' + score.getPlayer().getName(), score.getPlayer().getName())" />
+                <Button :type="ButtonType.Add" @click="addToPlayerScore(inputId + '.' + score.getPlayer().getName(), score.getPlayer())" />
             </p>
 
             <Button :type="ButtonType.Delete" @click="deleteFunction(game)" />
@@ -69,9 +69,9 @@ export default defineComponent({
             await this.addPlayerFunction(playerNameElement.value, this.game)
             this.closePlayerDialog()
         },
-        async addToPlayerScore(playerInputId: string, playerName: string) {
+        async addToPlayerScore(playerInputId: string, player: Player) {
             const newPlayerScoreElement = document.getElementById(playerInputId) as HTMLInputElement
-            await this.addToPlayerScoreFunction(parseInt(newPlayerScoreElement.value), playerName, this.game)
+            await this.addToPlayerScoreFunction(parseInt(newPlayerScoreElement.value), player, this.game)
             this.contentKey++
         }
     },

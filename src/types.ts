@@ -71,12 +71,20 @@ export class Game {
         return this.scores
     }
 
+    getPlayerScores(player: Player) {
+        return this.getScores().filter((s) => s.getPlayer().equals(player))
+    }
+
+    getPlayerLatestRound(player: Player) {
+        return this.getPlayerScores(player).reduce((acc, s) => acc.getRound() > s.getRound() ? acc : s)
+    }
+
     addPlayer(name: string) {
         this.scores.push(new Score(new Player(name)))
     }
 
-    addToPlayerScore(name: string, round: number, newScore: number) {
-        this.scores.push(new Score(new Player(name), newScore, round))
+    addToPlayerScore(player: Player, round: number, newScore: number) {
+        this.scores.push(new Score(player, newScore, round))
     }
 }
 
@@ -138,17 +146,21 @@ export class GameStorage {
         }
     }
 
-    async addToPlayerScore(newScore: number, playerName: string, game: Game) {
-        const keys = await this.keys()
+    async addToPlayerScore(scoreToAdd: number, player: Player, game: Game) {
+        const key = game.signature()
+        const updatedGame = await this.get(key)
+        const playerScores = updatedGame.getPlayerScores(player)
 
-        for (const key of keys) {
-            if ((await this.get(key)).equals(game)) {
-                const updatedGame = await this.get(key)
-                const latestScore = updatedGame.getScores().reduce((acc, s) => s.getPlayer().getName() != playerName ? acc : acc == null ? s : acc.getRound() > s.getRound() ? acc : s)
-                updatedGame.addToPlayerScore(playerName, latestScore!.getRound() + 1, latestScore!.getScore() + newScore)
-                await this.set(key, updatedGame)
-            }
+        if (playerScores.length == 0) {
+            return
         }
+
+        const latestScore = updatedGame.getPlayerLatestRound(player)
+        const newScore = latestScore!.getScore() + scoreToAdd
+        const newRound = latestScore!.getRound() + 1
+        updatedGame.addToPlayerScore(player, newRound, newScore)
+        
+        await this.set(key, updatedGame)
     }
 
     async remove(game: Game) {
