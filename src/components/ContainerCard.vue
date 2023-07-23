@@ -79,17 +79,13 @@ export default defineComponent({
         }
     },
     setup(props) {
-        const scores: Score[] = props.game.getScores().sort((a, b) => a.getPlayer().getName().localeCompare(b.getPlayer().getName()))
-
         const vsText = props.game.getVsText()
         const players = props.game.getPlayers()
         const lastRound = props.game.getLatestScore().getRound()
         const latestScore: Score[] = players.map((p) => props.game.getLatestScore(p))
-
-        const inputId = props.game.getGameNumber().toString() + "." + props.game.getType().toString() + ".input"
-        const dialogId = props.game.getGameNumber().toString() + "." + props.game.getType().toString() + ".dialog"
+        const inputId = `${props.game.signature()}.input`
+        const dialogId = `${props.game.signature()}.dialog`
         const dialogOpened = false
-
         const contentKey = ref(0)
 
         return {
