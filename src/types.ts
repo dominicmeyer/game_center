@@ -89,7 +89,7 @@ export class QwirkleGame extends Game {
         super(QwirkleGame.getType(), gameNumber, scores)
     }
 
-    public static getType(): GameType {
+    public static getType() {
         return GameType.Qwirkle
     }
 }
