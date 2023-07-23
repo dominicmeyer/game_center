@@ -15,8 +15,8 @@
       <div :key="listKey">
         <ion-item><Button :type="ButtonType.Add" @click="addNewGame()" /></ion-item>
         <ion-item v-for="game in sortGames()">
-          <ContainerCard :game="game" :delete-function="deleteGame" :add-player-function="addPlayer"
-            :add-to-player-score-function="addToPlayerScore" />
+          <ContainerCard :game="game" @delete-game="deleteGame" @add-player="addPlayer"
+            @add-to-player-score="addToPlayerScore" />
         </ion-item>
       </div>
 

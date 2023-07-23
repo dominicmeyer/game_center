@@ -9,10 +9,11 @@
             <p>Runde: {{ lastRound }}</p>
             <p v-for="score in latestScore">{{ score.getPlayer().getName() }}: {{ score.getScore() }}
                 <input type="text" :id="inputId + '.' + score.getPlayer().getName()">
-                <Button :type="ButtonType.Add" @click="addToPlayerScore(inputId + '.' + score.getPlayer().getName(), score.getPlayer())" />
+                <Button :type="ButtonType.Add"
+                    @click="addToPlayerScore(inputId + '.' + score.getPlayer().getName(), score.getPlayer())" />
             </p>
 
-            <Button :type="ButtonType.Delete" @click="deleteFunction(game)" />
+            <Button :type="ButtonType.Delete" @click="deleteGame(game)" />
             <Button :type="ButtonType.Add" v-if="lastRound == 1" @click="openPlayerDialog()" />
 
         </ion-card-content>
@@ -35,25 +36,27 @@ import { ButtonType } from './Button.vue';
 
 export default defineComponent({
     components: { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, Button },
+    emits: {
+        deleteGame: (game: Game) => {
+            return game
+        },
+        addPlayer: (playerName: string, game: Game) => {
+            return { playerName, game }
+        },
+        addToPlayerScore: (scoreToAdd: number, player: Player, game: Game) => {
+            return { scoreToAdd, player, game }
+        }
+    },
     props: {
         game: {
             type: Game,
             required: true
         },
-        deleteFunction: {
-            type: Function,
-            required: true
-        },
-        addPlayerFunction: {
-            type: Function,
-            required: true
-        },
-        addToPlayerScoreFunction: {
-            type: Function,
-            required: true
-        }
     },
     methods: {
+        deleteGame(game: Game) {
+            this.$emit("deleteGame", game)
+        },
         openPlayerDialog() {
             const dialogElement = document.getElementById(this.dialogId) as HTMLDialogElement
             dialogElement.showModal()
@@ -66,12 +69,12 @@ export default defineComponent({
         },
         async submitPlayerDialog() {
             const playerNameElement = document.getElementById(this.inputId) as HTMLInputElement
-            await this.addPlayerFunction(playerNameElement.value, this.game)
+            this.$emit("addPlayer", playerNameElement.value, this.game)
             this.closePlayerDialog()
         },
         async addToPlayerScore(playerInputId: string, player: Player) {
             const newPlayerScoreElement = document.getElementById(playerInputId) as HTMLInputElement
-            await this.addToPlayerScoreFunction(parseInt(newPlayerScoreElement.value), player, this.game)
+            this.$emit("addToPlayerScore", parseInt(newPlayerScoreElement.value), player, this.game)
             this.contentKey++
         }
     },
@@ -93,7 +96,7 @@ export default defineComponent({
         }
 
         const latestScore: Score[] = players.map((p) => {
-            const maxRound = scores.filter((s) => s.getPlayer().getName() == p.getName()).reduce((acc,s) => acc > s.getRound() ? acc : s.getRound(), 1)
+            const maxRound = scores.filter((s) => s.getPlayer().getName() == p.getName()).reduce((acc, s) => acc > s.getRound() ? acc : s.getRound(), 1)
             return scores.find((s) => s.getRound() == maxRound && s.getPlayer().getName() == p.getName())!
         })
 
