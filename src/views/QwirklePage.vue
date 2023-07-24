@@ -15,8 +15,8 @@
       <div :key="listKey">
         <ion-item><Button :type="ButtonType.Add" @click="addNewGame()" /></ion-item>
         <ion-item v-for="game in sortGames()">
-          <ContainerCard :game="game" :delete-function="deleteGame" :add-player-function="addPlayer"
-            :add-to-player-score-function="addToPlayerScore" />
+          <ContainerCard :game="game" @delete-game="deleteGame" @add-player="addPlayer"
+            @add-to-player-score="addToPlayerScore" />
         </ion-item>
       </div>
 
@@ -29,7 +29,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonIt
 import ContainerCard from '@/components/ContainerCard.vue';
 import Button from '@/components/Button.vue';
 import { ButtonType } from '@/components/Button.vue';
-import { QwirkleGame, GameStorage, Game } from '@/types';
+import { QwirkleGame, GameStorage, Game, Player } from '@/types';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -55,12 +55,12 @@ export default defineComponent({
       const gameNumber: number = this.gamesPlayed.length + 1
       const newGame = new QwirkleGame(gameNumber, [])
 
-      this.listKey++
       this.gamesPlayed.push(newGame)
       await this.qwirkleStore.add(newGame)
+      this.listKey++
     },
     sortGames(): QwirkleGame[] {
-      return this.gamesPlayed.sort((a, b) => b.gameNumber - a.gameNumber)
+      return this.gamesPlayed.sort((a, b) => b.getGameNumber() - a.getGameNumber())
     },
     async deleteGame(game: Game) {
       await this.qwirkleStore.remove(game)
@@ -77,12 +77,12 @@ export default defineComponent({
       })
       this.listKey++
     },
-    async addToPlayerScore(newScore: number, playerName: string, game: Game) {
-      await this.qwirkleStore.addToPlayerScore(newScore, playerName, game)
+    async addToPlayerScore(newScore: number, player: Player, game: Game) {
+      await this.qwirkleStore.addToPlayerScore(newScore, player, game)
       this.gamesPlayed = this.gamesPlayed.map((g) => {
         if (g.equals(game)) {
-          const latestScore = this.gamesPlayed.find((g) => g.equals(game))?.scores.reduce((acc, s) => s.player.name != playerName ? acc : acc == null ? s : acc.round > s.round ? acc : s)
-          g.addToPlayerScore(playerName, latestScore!.round + 1, latestScore!.score + newScore)
+          const latestScore = g.getLatestScore(player)
+          g.addToPlayerScore(player, latestScore!.getRound() + 1, latestScore!.getScore() + newScore)
         }
         return g
       })
