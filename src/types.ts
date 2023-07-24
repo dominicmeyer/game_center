@@ -78,6 +78,10 @@ export class Game {
     getLatestScore(player?: Player) {
         const scores = player != null ? this.getPlayerScores(player) : this.getScores()
 
+        if (scores.length == 0) {
+            return null
+        }
+
         return scores.reduce((acc, s) => acc.getRound() > s.getRound() ? acc : s)
     }
 

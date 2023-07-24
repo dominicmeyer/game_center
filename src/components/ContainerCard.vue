@@ -7,10 +7,10 @@
 
         <ion-card-content :key="contentKey">
             <p>Runde: {{ lastRound }}</p>
-            <p v-for="score in latestScore">{{ score.getPlayer().getName() }}: {{ score.getScore() }}
-                <input type="number" :id="inputId + '.' + score.getPlayer().getName()">
+            <p v-for="score in latestScores">{{ score?.getPlayer().getName() }}: {{ score?.getScore() }}
+                <input type="number" :id="inputId(score!)">
                 <Button :type="ButtonType.Add"
-                    @click="addToPlayerScore(inputId + '.' + score.getPlayer().getName(), score.getPlayer())" />
+                    @click="addToPlayerScore(inputId(score!), score!.getPlayer())" />
             </p>
 
             <Button :type="ButtonType.Delete" @click="deleteGame(game)" />
@@ -76,20 +76,24 @@ export default defineComponent({
             const newPlayerScoreElement = document.getElementById(playerInputId) as HTMLInputElement
             this.$emit("addToPlayerScore", parseInt(newPlayerScoreElement.value), player, this.game)
             this.contentKey++
+        },
+        inputId(score: Score) {
+            return `${this.inputId}.${score.getPlayer().getName()}`
         }
     },
     setup(props) {
         const vsText = props.game.getVsText()
         const players = props.game.getPlayers()
-        const lastRound = props.game.getLatestScore().getRound()
-        const latestScore: Score[] = players.map((p) => props.game.getLatestScore(p))
+        const latestScore = props.game.getLatestScore()
+        const lastRound = latestScore == null ? 1 : latestScore.getRound()
+        const latestScores = players.map((p) => props.game.getLatestScore(p)).filter((s) => s != null)
         const inputId = `${props.game.signature()}.input`
         const dialogId = `${props.game.signature()}.dialog`
         const dialogOpened = false
         const contentKey = ref(0)
 
         return {
-            vsText, latestScore, lastRound, dialogId, ButtonType, dialogOpened, contentKey, inputId
+            vsText, latestScores, lastRound, dialogId, ButtonType, dialogOpened, contentKey, inputId
         }
     }
 });
