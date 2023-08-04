@@ -1,4 +1,4 @@
-import { Game, GameType, Player, Score } from "./types"
+import { Game, GameType, Player, QwirkleGame, Score } from "./types"
 import { Storage } from "@ionic/storage"
 
 export class GameStorage {
@@ -8,8 +8,8 @@ export class GameStorage {
         this.store = new Storage()
     }
 
-    create() {
-        return this.store.create()
+    async create() {
+        await this.store.create()
     }
 
     add(value: Game) {
@@ -21,7 +21,7 @@ export class GameStorage {
         let games = []
 
         for (const key of keys) {
-            const game = await this.get(key)
+            const game = (await this.get(key))!
 
             if (type != null && game.getType() != type) {
                 continue
@@ -34,15 +34,28 @@ export class GameStorage {
     }
 
     async addPlayer(playerName: string, game: Game) {
+        if (!this.containsGame(game)) {
+            return
+        }
+
         const key = game.signature()
-        const updatedGame = await this.get(key)
+        const updatedGame = (await this.get(key))!
         updatedGame.addPlayer(playerName)
         await this.set(key, updatedGame)
     }
 
     async addToPlayerScore(scoreToAdd: number, player: Player, game: Game) {
+        if (!this.containsGame(game)) {
+            return
+        }
+
         const key = game.signature()
-        const updatedGame = await this.get(key)
+        const updatedGame = (await this.get(key))
+
+        if (updatedGame == null) {
+            return
+        }
+
         const playerScores = updatedGame.getPlayerScores(player)
 
         if (playerScores.length == 0) {
@@ -61,15 +74,27 @@ export class GameStorage {
         return this.store.remove(game.signature())
     }
 
-    private async get(key: string) {
-        const game = await this.store.get(key)
-        let scores: Score[] = []
+    private async containsGame(game: Game) {
+        return (await this.keys()).includes(game.signature())
+    }
 
-        for (const score of game.scores) {
-            scores.push(new Score(new Player(score.player.name), score.score, score.round))
+    private async get(key: string) {
+        const gameObject = await this.store.get(key)
+
+        if (gameObject == null) {
+            return
         }
 
-        return new Game(game.type, game.gameNumber, scores)
+        const scoresObject = gameObject.scores
+        const game = new Game(gameObject.type, gameObject.gameNumber, scoresObject.map((s: any) => new Score(new Player(s.player.name),s.score,s.round)))
+
+        let scores: Score[] = []
+
+        for (const score of game.getScores()) {
+            scores.push(new Score(new Player(score.getPlayer().getName()), score.getScore(), score.getRound()))
+        }
+
+        return new Game(game.getType(), game.getGameNumber(), scores)
     }
 
     private set(key: string, value: Game) {

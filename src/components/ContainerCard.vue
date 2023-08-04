@@ -97,4 +97,4 @@ export default defineComponent({
         }
     }
 });
-</script>@/types/types
+</script>

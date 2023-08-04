@@ -5,10 +5,13 @@ export class Score {
     private score: number
     private round: number
 
+    static StartingScore = 0
+    static StartingRound = 0
+
     constructor(player: Player, score?: number, round?: number) {
         this.player = player
-        this.score = score == null ? 0 : score
-        this.round = round == null ? 1 : round
+        this.score = score == null ? Score.StartingScore : score
+        this.round = round == null ? Score.StartingRound : round
     }
 
     getPlayer() {
