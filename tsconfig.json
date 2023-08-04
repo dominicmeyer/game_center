@@ -13,10 +13,11 @@
     "lib": ["ESNext", "DOM"],
     "skipLibCheck": true,
     "noEmit": true,
+    "typeRoots": ["./node_modules/@types/", "../node_modules/@types/", "../../node_modules/@types/","./src/types"],
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/types/types.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
