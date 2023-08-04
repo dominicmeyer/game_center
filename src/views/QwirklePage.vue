@@ -29,7 +29,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonIt
 import ContainerCard from '@/components/ContainerCard.vue';
 import Button from '@/components/Button.vue';
 import { ButtonType } from '@/components/Button.vue';
-import { QwirkleGame, GameStorage, Game, Player } from '@/types';
+import { QwirkleGame, GameStorage, Game, Player } from '@/types/types';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -90,4 +90,4 @@ export default defineComponent({
     }
   },
 })
-</script>
+</script>@/types/types

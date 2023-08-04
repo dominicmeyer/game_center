@@ -28,7 +28,7 @@
 </template>
   
 <script lang="ts">
-import { Game, Player, Score } from '@/types';
+import { Game, Player, Score } from '@/types/types';
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { defineComponent, ref } from 'vue';
 import Button from './Button.vue';
