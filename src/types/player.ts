@@ -23,3 +23,28 @@ export class Player {
         return this.name == otherPlayer.name
     }
 }
+
+export class Players {
+    private players: Set<Player>
+
+    constructor() {
+        this.players = new Set()
+    }
+
+    nextPlayerId() {
+        const highestId: number = Array.from(this.players).reduce((acc, p) => acc > p.getId() ? acc : p.getId(), 0)
+        return highestId + 1
+    }
+
+    get() {
+        return Array.from(this.players).sort((a, b) => a.getName().localeCompare(b.getName()))
+    }
+
+    add(player: Player) {
+        this.players.add(player)
+    }
+
+    containsName(name: string) {
+        return Array.from(this.players).reduce((acc, p) => acc || p.getName() == name, false)
+    }
+}
