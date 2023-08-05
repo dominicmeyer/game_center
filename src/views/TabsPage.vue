@@ -7,6 +7,11 @@
           <ion-icon aria-hidden="true" :icon="square" />
           <ion-label>Qwirkle</ion-label>
         </ion-tab-button>
+
+        <ion-tab-button tab="qwirkle" href="/games/players">
+          <ion-icon aria-hidden="true" :icon="person" />
+          <ion-label>Spieler</ion-label>
+        </ion-tab-button>
       </ion-tab-bar>
     </ion-tabs>
   </ion-page>
@@ -14,5 +19,5 @@
 
 <script setup lang="ts">
 import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonIcon, IonPage, IonRouterOutlet } from '@ionic/vue';
-import { square } from 'ionicons/icons';
+import { square, person } from 'ionicons/icons';
 </script>

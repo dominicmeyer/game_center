@@ -8,7 +8,7 @@ export class Player {
         const gameStorage = useGamesStore()
 
         this.name = name
-        this.id = gameStorage.newPlayerId
+        this.id = gameStorage.nextPlayerId
     }
 
     getName() {
