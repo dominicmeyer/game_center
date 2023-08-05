@@ -8,11 +8,15 @@ export class Player {
         const gameStorage = useGamesStore()
 
         this.name = name
-        this.id = gameStorage.nextPlayerId
+        this.id = gameStorage.players.nextId()
     }
 
     getName() {
         return this.name
+    }
+
+    setName(newName: string) {
+        this.name = newName
     }
 
     getId() {
@@ -31,17 +35,36 @@ export class Players {
         this.players = new Set()
     }
 
-    nextPlayerId() {
+    nextId() {
         const highestId: number = Array.from(this.players).reduce((acc, p) => acc > p.getId() ? acc : p.getId(), 0)
         return highestId + 1
     }
 
-    get() {
+    list() {
         return Array.from(this.players).sort((a, b) => a.getName().localeCompare(b.getName()))
     }
 
     add(player: Player) {
-        this.players.add(player)
+        if (this.containsName(player.getName())) {
+            alert(`Es gibt bereits einen Spieler/in mit dem Namen ${player.getName()}`)
+        } else {
+            this.players.add(player)
+        }
+    }
+
+    remove(player: Player) {
+        this.players.delete(player)
+    }
+
+    rename(player: Player, newName: string): Player {
+        if (this.containsName(newName) && player.getName() != newName) {
+            alert(`Es gibt bereits einen Spieler/in mit dem Namen ${newName}`)
+        } else {
+            this.remove(player)
+            player.setName(newName)
+            this.add(player)
+        }
+        return player
     }
 
     containsName(name: string) {

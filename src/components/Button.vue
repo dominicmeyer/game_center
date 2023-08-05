@@ -7,10 +7,10 @@
 <script lang="ts">
 import { IonButton, IonIcon } from '@ionic/vue';
 import { PropType, defineComponent } from 'vue';
-import { trashOutline, addOutline, closeOutline, saveOutline, squareOutline } from 'ionicons/icons';
+import { trashOutline, addOutline, closeOutline, saveOutline, squareOutline, pencilOutline } from 'ionicons/icons';
 
 export enum ButtonType {
-  Delete, Add, Close, Save
+  Delete, Add, Close, Save, Edit
 }
 
 export default defineComponent({
@@ -36,6 +36,9 @@ export default defineComponent({
         break;
       case ButtonType.Save:
         icon = saveOutline
+        break;
+      case ButtonType.Edit:
+        icon = pencilOutline
         break;
       default:
         icon = squareOutline
