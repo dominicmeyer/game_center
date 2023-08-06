@@ -12,7 +12,7 @@
                 </ion-toolbar>
             </ion-header>
 
-        <input @keyup.enter="addPlayer" type="text" v-model="addPlayerName" placeholder="Name des Spielers">
+            <input @keyup.enter="addPlayer" type="text" v-model="addPlayerName" placeholder="Name des Spielers">
             <Button @click="addPlayer" :type="ButtonType.Add" />
 
             <ion-item v-for="player in gamesStore.players.list()">
@@ -26,7 +26,7 @@
 <script lang="ts">
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton } from '@ionic/vue';
 import Button, { ButtonType } from '@/components/Button.vue';
-import { useGamesStore } from "@/stores/gameStorage" 
+import { useGamesStore } from "@/stores/gameStorage"
 import { Player } from "@/types/types"
 import PlayerCard from '@/components/PlayerCard.vue';
 

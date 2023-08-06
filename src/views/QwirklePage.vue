@@ -12,83 +12,95 @@
         </ion-toolbar>
       </ion-header>
 
-      <!-- <div :key="listKey">
-        <ion-item><Button :type="ButtonType.Add" @click="addNewGame()" /></ion-item>
-        <ion-item v-for="game in sortGames()">
-          <ContainerCard :game="game" @delete-game="deleteGame" @add-player="addPlayer"
-            @add-to-player-score="addToPlayerScore" />
-        </ion-item>
-      </div> -->
+      <Button @click="startAddGameDialog" :type="ButtonType.Add" />
+
+      <ion-modal :is-open="addGameDialogIsOpen" @willDismiss="closeAddGameDialog">
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <Button @click="closeAddGameDialog" :type="ButtonType.Close" />
+            </ion-buttons>
+            <ion-title>Neues Spiel erstellen</ion-title>
+            <ion-buttons slot="end">
+              <Button @click="addGame" :type="ButtonType.Save" />
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content>
+          <ion-item>
+            <h1>Spieler hinzufügen:</h1>
+          </ion-item>
+          <ion-item v-for="player in gamesStore.players.list()">
+            <ion-checkbox slot="start" @ionChange="changePlayerIdStatus(player)"></ion-checkbox>
+            <ion-label>{{ player.getName() }}</ion-label>
+          </ion-item>
+        </ion-content>
+      </ion-modal>
+
+      <ion-item v-for="game in gamesStore.games.filter(GameType.Qwirkle)">
+        <GameCard :game="game" />
+      </ion-item>
 
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton } from '@ionic/vue';
-import ContainerCard from '@/components/ContainerCard.vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton, IonModal, IonCheckbox, IonLabel } from '@ionic/vue';
+import GameCard from '@/components/GameCard.vue';
 import Button from '@/components/Button.vue';
 import { ButtonType } from '@/components/Button.vue';
-import { QwirkleGame, GameStorage, Game, Player } from '@/types/types';
-import { defineComponent, ref } from 'vue';
+import { Game, GameType, Player } from '@/types/types';
+import { defineComponent } from 'vue';
+import { useGamesStore } from '@/stores/gameStorage';
 
 export default defineComponent({
   async setup() {
-    // const qwirkleStore = new GameStorage()
-    // await qwirkleStore.create()
+    const gamesStore = useGamesStore()
+    const playersToAdd: Set<Player> = new Set()
 
-    // const listKey = ref(0)
-    // const gamesPlayed = await qwirkleStore.getGames(QwirkleGame.getType())
-
-    // return {
-    //   qwirkleStore,
-    //   gamesPlayed,
-    //   listKey,
-    //   ButtonType
-    // }
-    return {  }
+    return {
+      gamesStore,
+      ButtonType,
+      GameType,
+      playersToAdd
+    }
   },
   components: {
-    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, ContainerCard, Button, IonButton
+    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, GameCard, Button, IonButton, IonModal, IonCheckbox, IonLabel
+  },
+  data() {
+    return {
+      addGameDialogIsOpen: false
+    }
   },
   methods: {
-    // async addNewGame() {
-    //   const gameNumber: number = this.gamesPlayed.length + 1
-    //   const newGame = new QwirkleGame(gameNumber, [])
+    addGame() {
+      const newGame = new Game(GameType.Qwirkle)
 
-    //   this.gamesPlayed.push(newGame)
-    //   await this.qwirkleStore.add(newGame)
-    //   this.listKey++
-    // },
-    // sortGames(): QwirkleGame[] {
-    //   return this.gamesPlayed.sort((a, b) => b.getGameNumber() - a.getGameNumber())
-    // },
-    // async deleteGame(game: Game) {
-    //   await this.qwirkleStore.remove(game)
-    //   this.gamesPlayed = this.gamesPlayed.filter((g) => !g.equals(game))
-    //   this.listKey++
-    // },
-    // async addPlayer(playerName: string, game: Game) {
-    //   await this.qwirkleStore.addPlayer(playerName, game)
-    //   this.gamesPlayed = this.gamesPlayed.map((g) => {
-    //     if (g.equals(game)) {
-    //       g.addPlayer(playerName)
-    //     }
-    //     return g
-    //   })
-    //   this.listKey++
-    // },
-    // async addToPlayerScore(newScore: number, player: Player, game: Game) {
-    //   await this.qwirkleStore.addToPlayerScore(newScore, player, game)
-    //   this.gamesPlayed = this.gamesPlayed.map((g) => {
-    //     if (g.equals(game)) {
-    //       const latestScore = g.getLatestScore(player)
-    //       g.addToPlayerScore(player, latestScore!.getRound() + 1, latestScore!.getScore() + newScore)
-    //     }
-    //     return g
-    //   })
-    //   this.listKey++
-    // }
+      this.playersToAdd.forEach((player) => {
+        newGame.addPlayer(player)
+      })
+
+      this.gamesStore.games.add(newGame)
+      this.closeAddGameDialog()
+      this.playersToAdd.clear()
+    },
+    startAddGameDialog() {
+      this.addGameDialogIsOpen = true
+    },
+    closeAddGameDialog() {
+      this.addGameDialogIsOpen = false
+      this.playersToAdd.clear()
+    },
+    changePlayerIdStatus(player: Player) {
+      if (this.playersToAdd.has(player)) {
+        this.playersToAdd.delete(player)
+      } else {
+        this.playersToAdd.add(player)
+      }
+    }
   },
 })
-</script>@/types/types
+</script>

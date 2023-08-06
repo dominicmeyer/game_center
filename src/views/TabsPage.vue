@@ -8,7 +8,7 @@
           <ion-label>Qwirkle</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="qwirkle" href="/games/players">
+        <ion-tab-button tab="players" href="/games/players">
           <ion-icon aria-hidden="true" :icon="person" />
           <ion-label>Spieler</ion-label>
         </ion-tab-button>

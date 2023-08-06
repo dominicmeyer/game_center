@@ -7,7 +7,7 @@ import PlayerPage from '@/views/PlayerPage.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/games/qwirkle'
+    redirect: '/games/'
   },
   {
     path: '/games/',
@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '',
-        redirect: '/games/qwirkle'
+        redirect: '/games/players'
       },
       {
         path: 'qwirkle',
