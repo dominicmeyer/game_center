@@ -1,4 +1,4 @@
-import { Games, Players, Player, Scores } from '@/types/types'
+import { Games, Players, Scores } from '@/types/types'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 

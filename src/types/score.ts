@@ -42,8 +42,8 @@ export class Scores
     extends Collection<Score>
     implements Sortable<Score> {
 
-    constructor() {
-        super()
+    constructor(items?: Score[]) {
+        super(items)
     }
 
     sorted(): Score[] {
@@ -51,9 +51,7 @@ export class Scores
     }
 
     filter(game: Game) {
-        const scores = new Scores()
-        this.array().filter((s) => s.gameId == game.id).forEach((s) => scores.add(s))
-        return scores
+        return new Scores(this.array().filter((s) => s.gameId == game.id))
     }
 
     findHighestRound(game: Game) {

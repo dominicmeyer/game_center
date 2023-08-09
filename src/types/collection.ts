@@ -35,9 +35,10 @@ export class Collection<T extends IdentifiableByID>
         
     private items: Set<T>
 
-    constructor() {
-        this.items = new Set()
+    constructor(items?: Set<T> | Array<T>) {
+        this.items = new Set(items)
     }
+
     nextId(): number {
         const highestId: number = this.array().reduce((acc, p) => acc > p.id ? acc : p.id, 0)
         return highestId + 1

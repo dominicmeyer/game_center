@@ -46,14 +46,12 @@ export default {
     },
     methods: {
         addPlayer() {
-            const newPlayer = new Player(this.addPlayerName)
-
-            if (!this.gamesStore.players.validate(newPlayer)) {
+            if (!this.gamesStore.players.validate(this.addPlayerName)) {
                 return
             }
 
             this.addPlayerName = ""
-            this.gamesStore.players.add(newPlayer)
+            this.gamesStore.players.add(new Player(this.addPlayerName))
         }
     },
 }

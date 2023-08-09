@@ -24,36 +24,16 @@ import { ref } from 'vue';
 
 export default {
     setup(props) {
-        const gamesStore = useGamesStore()
-        const playerName = props.player.name
-        const renamePlayerStatus = false
-        const cardKey = ref(0)
-
         return {
-            ButtonType,
-            gamesStore,
-            renamePlayerStatus,
-            playerName,
-            cardKey
+            gamesStore: useGamesStore(),
+            renamePlayerStatus: false,
+            playerName: props.player.name,
+            oldPlayerName: props.player.name,
+            cardKey: ref(0)
         }
-    },
-    props: {
-        player: {
-            type: Player,
-            required: true,
-        }
-    },
-    data() {
-        return {
-            oldPlayerName: this.player.name
-        }
-    },
-    components: {
-        IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton, Button
     },
     methods: {
         rerenderCard() {
-            console.log(this.playerName)
             this.cardKey++
         },
         removePlayer() {
@@ -74,8 +54,7 @@ export default {
         },
         renamePlayer() {
             if (this.playerName != this.oldPlayerName) {
-                this.player.name = this.playerName
-                if (!this.gamesStore.players.validate(new Player(this.playerName))) {
+                if (!this.gamesStore.players.validate(this.playerName)) {
                     this.player.name = this.oldPlayerName
                     return
                 }
@@ -83,6 +62,28 @@ export default {
             }
             this.closeRenamingPlayer()
         }
+    },
+    data() {
+        return {
+            ButtonType
+        }
+    },
+    props: {
+        player: {
+            type: Player,
+            required: true,
+        }
+    },
+    components: {
+        IonPage, 
+        IonHeader, 
+        IonToolbar, 
+        IonTitle, 
+        IonContent, 
+        IonButtons, 
+        IonItem, 
+        IonButton, 
+        Button
     },
 }
 </script>

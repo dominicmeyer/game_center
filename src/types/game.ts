@@ -40,8 +40,8 @@ export enum GameType {
 export class Games extends Collection<Game>
     implements Sortable<Game> {
 
-    constructor() {
-        super()
+    constructor(items?: Game[] ) {
+        super(items)
     }
 
     sorted(): Game[] {
@@ -49,8 +49,6 @@ export class Games extends Collection<Game>
     }
 
     filter(gameType: GameType) {
-        const games = new Games()
-        this.array().filter((g) => g.type == gameType).forEach((g) => games.add(g))
-        return games
+        return new Games(this.array().filter((g) => g.type == gameType))
     }
 }
