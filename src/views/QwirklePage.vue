@@ -32,8 +32,8 @@
             <h1>Spieler hinzufügen:</h1>
           </ion-item>
           <ion-item v-for="player in gamesStore.players.list()">
-            <ion-checkbox slot="start" @ionChange="changePlayerIdStatus(player)"></ion-checkbox>
-            <ion-label>{{ player.getName() }}</ion-label>
+            <ion-checkbox slot="start" @ionChange="changePlayerIdStatus(player)" label-placement="end">{{ player.getName()
+            }}</ion-checkbox>
           </ion-item>
         </ion-content>
       </ion-modal>
@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton, IonModal, IonCheckbox, IonLabel } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton, IonModal, IonCheckbox } from '@ionic/vue';
 import GameCard from '@/components/GameCard.vue';
 import Button from '@/components/Button.vue';
 import { ButtonType } from '@/components/Button.vue';
@@ -60,6 +60,24 @@ export default defineComponent({
     const gamesStore = useGamesStore()
     const playersToAdd: Set<Player> = new Set()
 
+    gamesStore.players.add(new Player("Dominic"))
+    gamesStore.players.add(new Player("Josy"))
+    gamesStore.players.add(new Player("Anna"))
+
+    const game1 = new Game(GameType.Qwirkle)
+    const game2 = new Game(GameType.Qwirkle)
+    const game3 = new Game(GameType.Qwirkle)
+
+    gamesStore.players.list().forEach((p) => {
+      game1.addPlayer(p)
+      game2.addPlayer(p)
+      game3.addPlayer(p)
+    })
+
+    gamesStore.games.add(game1)
+    gamesStore.games.add(game2)
+    gamesStore.games.add(game3)
+
     return {
       gamesStore,
       ButtonType,
@@ -68,7 +86,7 @@ export default defineComponent({
     }
   },
   components: {
-    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, GameCard, Button, IonButton, IonModal, IonCheckbox, IonLabel
+    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, GameCard, Button, IonButton, IonModal, IonCheckbox
   },
   data() {
     return {

@@ -67,6 +67,10 @@ export class Games {
         } 
     }
 
+    remove(game: Game) {
+        this.games.delete(game)
+    }
+
     containsGame(game: Game) {
         return this.games.has(game)
     }
