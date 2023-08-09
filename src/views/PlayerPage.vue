@@ -15,7 +15,7 @@
             <input @keyup.enter="addPlayer" type="text" v-model="addPlayerName" placeholder="Name des Spielers">
             <Button @click="addPlayer" :type="ButtonType.Add" />
 
-            <ion-item v-for="player in gamesStore.players.list()">
+            <ion-item v-for="player in gamesStore.players.sorted()">
                 <PlayerCard :player="player" />
             </ion-item>
 
@@ -47,8 +47,12 @@ export default {
     methods: {
         addPlayer() {
             const newPlayer = new Player(this.addPlayerName)
-            this.addPlayerName = ""
 
+            if (!this.gamesStore.players.validate(newPlayer)) {
+                return
+            }
+
+            this.addPlayerName = ""
             this.gamesStore.players.add(newPlayer)
         }
     },

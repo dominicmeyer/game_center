@@ -1,78 +1,72 @@
 import { useGamesStore } from "@/stores/gameStorage"
 import { Game, Player } from "./types"
+import { Collection, IdentifiableByID, Sortable, Validator } from "./collection"
 
-export class Score {
-    private id: number
-    private gameId: number
-    private player: Player
-    private score: number
-    private round: number
+export class Score extends IdentifiableByID {
+    private _player: Player
+    private _score: number
+    private _round: number
+    private _gameId: number
 
     static StartingScore = 0
     static StartingRound = 0
 
-    constructor(player: Player, gameId: number, score: number, round: number) {
+    constructor(player: Player, score: number, round: number, gameId: number) {
         const gameStorage = useGamesStore()
         
-        this.id = gameStorage.games.nextId()
-        this.gameId = gameId
-        this.player = player
-        this.score = score
-        this.round = round
+        super(gameStorage.scores)
+        this._player = player
+        this._score = score
+        this._round = round
+        this._gameId = gameId
     }
 
-    getPlayer() {
-        return this.player
+    get player() {
+        return this._player
     }
 
-    getScore() {
-        return this.score
+    get score() {
+        return this._score
     }
 
-    getRound() {
-        return this.round
+    get round() {
+        return this._round
     }
 
-    getId() {
-        return this.id
-    }
-
-    getGameId() {
-        return this.gameId
+    get gameId() {
+        return this._gameId
     }
 }
 
-export class Scores {
-    private scores: Set<Score>
+export class Scores 
+    extends Collection<Score>
+    implements Sortable<Score> {
 
     constructor() {
-        this.scores = new Set()
+        super()
     }
 
-    nextId() {
-        const highestId: number = Array.from(this.scores).reduce((acc, p) => acc > p.getId() ? acc : p.getId(), 0)
-        return highestId + 1
+    sorted(): Score[] {
+        return this.array().sort((a,b) => a.round - b.round)
     }
 
-    add(score: Score) {
-        this.scores.add(score)
-    }
-
-    list(game: Game) {
-        return Array.from(this.scores).filter((s) => s.getGameId() == game.getId())
+    filter(game: Game) {
+        const scores = new Scores()
+        this.array().filter((s) => s.gameId == game.id).forEach((s) => scores.add(s))
+        return scores
     }
 
     findHighestRound(game: Game) {
-        return this.list(game).reduce((acc, s) => acc > s.getRound() ? acc : s.getRound(), 0)
+        return this.filter(game).array().reduce((acc, s) => acc > s.round ? acc : s.round, 0)
     }
 
     findPlayerScores(game: Game, player: Player) {
-        return this.list(game).filter((s) => s.getPlayer().equals(player))
+        return this.filter(game).array().filter((s) => s.player.equals(player))
     }
 
     findLatestScore(game: Game, player: Player) {
         const playerScores = this.findPlayerScores(game, player)
-        const latestRound = playerScores.reduce((acc, s) => acc > s.getRound() ? acc : s.getRound(), 0)
-        return playerScores.find((s) => s.getRound() == latestRound)
+        const latestRound = playerScores.reduce((acc, s) => acc > s.round ? acc : s.round, 0)
+        return playerScores.find((s) => s.round == latestRound)
     }
 }

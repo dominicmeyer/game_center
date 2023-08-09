@@ -31,14 +31,14 @@
           <ion-item>
             <h1>Spieler hinzufügen:</h1>
           </ion-item>
-          <ion-item v-for="player in gamesStore.players.list()">
-            <ion-checkbox slot="start" @ionChange="changePlayerIdStatus(player)" label-placement="end">{{ player.getName()
+          <ion-item v-for="player in gamesStore.players.sorted()">
+            <ion-checkbox slot="start" @ionChange="changePlayerIdStatus(player)" label-placement="end">{{ player.name
             }}</ion-checkbox>
           </ion-item>
         </ion-content>
       </ion-modal>
 
-      <ion-item v-for="game in gamesStore.games.filter(GameType.Qwirkle)">
+      <ion-item v-for="game in gamesStore.games.filter(GameType.Qwirkle).sorted()">
         <GameCard :game="game" />
       </ion-item>
 
@@ -68,10 +68,10 @@ export default defineComponent({
     const game2 = new Game(GameType.Qwirkle)
     const game3 = new Game(GameType.Qwirkle)
 
-    gamesStore.players.list().forEach((p) => {
-      game1.addPlayer(p)
-      game2.addPlayer(p)
-      game3.addPlayer(p)
+    gamesStore.players.array().forEach((p) => {
+      game1.add(p)
+      game2.add(p)
+      game3.add(p)
     })
 
     gamesStore.games.add(game1)
@@ -98,7 +98,7 @@ export default defineComponent({
       const newGame = new Game(GameType.Qwirkle)
 
       this.playersToAdd.forEach((player) => {
-        newGame.addPlayer(player)
+        newGame.add(player)
       })
 
       this.gamesStore.games.add(newGame)

@@ -2,18 +2,19 @@
     <ion-card>
         <ion-card-header>
             <ion-card-title>
-                {{ game.getVsText() }}
+                {{ game.vsText() }}
                 <Button @click="removeGame" :type="ButtonType.Delete" />
             </ion-card-title>
             <ion-card-subtitle>
                 Aktuelle Runde: {{ gamesStore.scores.findHighestRound(game) }}
+                Spiel Nummer: {{ game.id }}
             </ion-card-subtitle>
         </ion-card-header>
 
         <ion-card-content>
-            <ion-item v-for="player in game.getPlayers()">
+            <ion-item v-for="player in game.players">
                 <p>
-                    {{ player.getName() }}: {{ playerScore(player) }}
+                    {{ player.name }}: {{ playerScore(player) }}
                 </p>
                 <p>
                     <Button :type="ButtonType.Add" @click="startAddScoreDialog(player)" />
@@ -81,7 +82,7 @@ export default {
         },
         playerScore(player: Player) {
             const latestScore = this.gamesStore.scores.findLatestScore(this.game, player)
-            return latestScore == null ? 0 : latestScore.getScore()
+            return latestScore == null ? 0 : latestScore.score
         },
         startAddScoreDialog(player: Player) {
             this.playerToAddScore = player
@@ -92,13 +93,13 @@ export default {
         },
         addScore() {
             const player = this.playerToAddScore! as Player
-            const playerLatestScore = this.gamesStore.scores.findLatestScore(this.game, player)?.getScore()
-            const playerLatestRound = this.gamesStore.scores.findLatestScore(this.game, player)?.getRound()
+            const playerLatestScore = this.gamesStore.scores.findLatestScore(this.game, player)?.score
+            const playerLatestRound = this.gamesStore.scores.findLatestScore(this.game, player)?.round
 
             this.gamesStore.scores.add(
                 new Score(
                     player, 
-                    this.game.getId(), 
+                    this.game.id, 
                     playerLatestScore == null ? this.scoreToAdd : playerLatestScore + this.scoreToAdd, 
                     playerLatestRound == null ? 1 : playerLatestRound + 1)
             )

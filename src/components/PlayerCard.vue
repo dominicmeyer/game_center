@@ -1,7 +1,7 @@
 <template>
     <div :key="cardKey">
         <div v-if="!renamePlayerStatus">
-            <h1>Spieler/in: {{ playerName }}</h1>
+            <h1>Spieler/in: <span>{{ playerName }}</span></h1>
             <Button @click="removePlayer" :type="ButtonType.Delete" />
             <Button @click="startRenamingPlayer" :type="ButtonType.Edit" />
         </div>
@@ -25,7 +25,7 @@ import { ref } from 'vue';
 export default {
     setup(props) {
         const gamesStore = useGamesStore()
-        const playerName = props.player.getName()
+        const playerName = props.player.name
         const renamePlayerStatus = false
         const cardKey = ref(0)
 
@@ -45,7 +45,7 @@ export default {
     },
     data() {
         return {
-            oldPlayerName: this.player.getName()
+            oldPlayerName: this.player.name
         }
     },
     components: {
@@ -53,6 +53,7 @@ export default {
     },
     methods: {
         rerenderCard() {
+            console.log(this.playerName)
             this.cardKey++
         },
         removePlayer() {
@@ -65,12 +66,22 @@ export default {
         },
         cancelRenamingPlayer() {
             this.playerName = this.oldPlayerName
+            this.closeRenamingPlayer()
+        },
+        closeRenamingPlayer() {
             this.renamePlayerStatus = false
             this.rerenderCard()
         },
         renamePlayer() {
-            this.gamesStore.players.rename(this.player, this.playerName)
-            this.cancelRenamingPlayer()
+            if (this.playerName != this.oldPlayerName) {
+                this.player.name = this.playerName
+                if (!this.gamesStore.players.validate(new Player(this.playerName))) {
+                    this.player.name = this.oldPlayerName
+                    return
+                }
+                this.gamesStore.players.renamePlayer(this.oldPlayerName, this.playerName)
+            }
+            this.closeRenamingPlayer()
         }
     },
 }

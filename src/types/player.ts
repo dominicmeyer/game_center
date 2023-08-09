@@ -1,73 +1,45 @@
 import { useGamesStore } from "@/stores/gameStorage"
+import { Collection, IdentifiableByID, Sortable, Validator } from "./collection"
 
-export class Player {
-    private name: string
-    private id: number
+export class Player extends IdentifiableByID {
+    name: string
 
     constructor(name: string) {
         const gameStorage = useGamesStore()
 
+        super(gameStorage.players)
         this.name = name
-        this.id = gameStorage.players.nextId()
-    }
-
-    getName() {
-        return this.name
-    }
-
-    setName(newName: string) {
-        this.name = newName
-    }
-
-    getId() {
-        return this.id
-    }
-
-    equals(otherPlayer: Player) {
-        return this.name == otherPlayer.name
     }
 }
 
-export class Players {
-    private players: Set<Player>
+export class Players
+    extends Collection<Player>
+    implements Sortable<Player>, Validator<Player> {
 
     constructor() {
-        this.players = new Set()
+        super()
     }
 
-    nextId() {
-        const highestId: number = Array.from(this.players).reduce((acc, p) => acc > p.getId() ? acc : p.getId(), 0)
-        return highestId + 1
+    sorted(): Player[] {
+        return this.array().sort((a, b) => a.name.localeCompare(b.name))
     }
 
-    list() {
-        return Array.from(this.players).sort((a, b) => a.getName().localeCompare(b.getName()))
-    }
-
-    add(player: Player) {
-        if (this.containsName(player.getName())) {
-            alert(`Es gibt bereits einen Spieler/in mit dem Namen ${player.getName()}`)
-        } else {
-            this.players.add(player)
+    validate(value: Player) {
+        const contains = this.containsName(value.name)
+        if (contains) {
+            alert(`Es gibt bereits einen Spieler/in mit dem Namen ${name}`)
         }
+        return !contains
     }
 
-    remove(player: Player) {
-        this.players.delete(player)
+    renamePlayer(oldName: string, newName: string) {
+        const player = this.array().find((p) => p.name == oldName)!
+        this.remove(player)
+        player.name = newName
+        this.add(player)
     }
 
-    rename(player: Player, newName: string): Player {
-        if (this.containsName(newName) && player.getName() != newName) {
-            alert(`Es gibt bereits einen Spieler/in mit dem Namen ${newName}`)
-        } else {
-            this.remove(player)
-            player.setName(newName)
-            this.add(player)
-        }
-        return player
-    }
-
-    containsName(name: string) {
-        return Array.from(this.players).reduce((acc, p) => acc || p.getName() == name, false)
+    private containsName(name: string) {
+        return this.array().reduce((acc, p) => acc || p.name == name, false)
     }
 }
