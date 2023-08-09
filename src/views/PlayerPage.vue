@@ -15,44 +15,35 @@
             <input @keyup.enter="addPlayer" type="text" v-model="addPlayerName" placeholder="Name des Spielers">
             <Button @click="addPlayer" :type="ButtonType.Add" />
 
-            <ion-item v-for="player in gamesStore.players.sorted()">
-                <PlayerCard :player="player" />
-            </ion-item>
+            <div :key="listKey">
+                <ion-item v-for="player in gamesStore.players.sorted()">
+                    <PlayerCard :player="player" @delete="listKey++" />
+                </ion-item>
+            </div>
+
 
         </ion-content>
     </ion-page>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton } from '@ionic/vue';
 import Button, { ButtonType } from '@/components/Button.vue';
 import { useGamesStore } from "@/stores/gameStorage"
 import { Player } from "@/types/types"
 import PlayerCard from '@/components/PlayerCard.vue';
+import { ref } from 'vue';
 
-export default {
-    setup() {
-        const gamesStore = useGamesStore()
-        const addPlayerName = ""
+const gamesStore = useGamesStore()
+const addPlayerName = ref("")
+const listKey = ref(0)
 
-        return {
-            ButtonType,
-            addPlayerName,
-            gamesStore
-        }
-    },
-    components: {
-        IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton, Button, PlayerCard
-    },
-    methods: {
-        addPlayer() {
-            if (!this.gamesStore.players.validate(this.addPlayerName)) {
-                return
-            }
+const addPlayer = () => {
+    if (!gamesStore.players.validate(addPlayerName.value)) {
+        return
+    }
 
-            this.addPlayerName = ""
-            this.gamesStore.players.add(new Player(this.addPlayerName))
-        }
-    },
+    addPlayerName.value = ""
+    gamesStore.players.add(new Player(addPlayerName.value))
 }
 </script>

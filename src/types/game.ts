@@ -45,7 +45,7 @@ export class Games extends Collection<Game>
     }
 
     sorted(): Game[] {
-        return this.array().sort((a,b) => a.id - b.id)
+        return this.array().sort((a,b) => b.id - a.id)
     }
 
     filter(gameType: GameType) {

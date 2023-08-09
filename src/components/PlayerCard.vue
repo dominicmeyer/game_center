@@ -1,89 +1,59 @@
 <template>
-    <div :key="cardKey">
-        <div v-if="!renamePlayerStatus">
-            <h1>Spieler/in: <span>{{ playerName }}</span></h1>
-            <Button @click="removePlayer" :type="ButtonType.Delete" />
-            <Button @click="startRenamingPlayer" :type="ButtonType.Edit" />
-        </div>
-        <div v-if="renamePlayerStatus">
-            <h1>Spieler/in: 
-                <input type="text" v-model="playerName" @keyup.enter="renamePlayer">
-            </h1>
-            <Button @click="cancelRenamingPlayer" :type="ButtonType.Close" />
-            <Button @click="renamePlayer" :type="ButtonType.Save" />
-        </div>
+    <div v-show="!openRename">
+        <h1>Spieler/in: <span>{{ playerName }}</span></h1>
+        <Button @click="removePlayer" :type="ButtonType.Delete" />
+        <Button @click="startRename" :type="ButtonType.Edit" />
+    </div>
+    <div v-show="openRename">
+        <h1>Spieler/in:
+            <input type="text" v-model="playerName" @keyup.enter="renamePlayer">
+        </h1>
+        <Button @click="cancelRename" :type="ButtonType.Close" />
+        <Button @click="renamePlayer" :type="ButtonType.Save" />
     </div>
 </template>
 
-<script lang="ts">
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton } from '@ionic/vue';
+<script lang="ts" setup>
 import Button, { ButtonType } from '@/components/Button.vue';
-import { useGamesStore } from "@/stores/gameStorage" 
+import { useGamesStore } from "@/stores/gameStorage"
 import { Player } from "@/types/types"
 import { ref } from 'vue';
 
-export default {
-    setup(props) {
-        return {
-            gamesStore: useGamesStore(),
-            renamePlayerStatus: false,
-            playerName: props.player.name,
-            oldPlayerName: props.player.name,
-            cardKey: ref(0)
+const props = defineProps({
+    player: {
+        type: Player,
+        required: true,
+    }
+})
+
+const emit = defineEmits({
+    delete: () => true
+})
+
+const gamesStore = useGamesStore()
+const openRename = ref(false)
+const playerName = ref(props.player.name)
+const oldPlayerName = ref(props.player.name)
+
+const startRename = () => {
+    openRename.value = true
+}
+const cancelRename = () => {
+    openRename.value = false
+    playerName.value = oldPlayerName.value
+}
+const removePlayer = () => {
+    gamesStore.players.remove(props.player)
+    emit("delete")
+}
+const renamePlayer = () => {
+    if (playerName.value != oldPlayerName.value) {
+        if (!gamesStore.players.validate(playerName.value)) {
+            return
         }
-    },
-    methods: {
-        rerenderCard() {
-            this.cardKey++
-        },
-        removePlayer() {
-            this.gamesStore.players.remove(this.player)
-        },
-        startRenamingPlayer() {
-            this.oldPlayerName = this.playerName
-            this.renamePlayerStatus = true
-            this.rerenderCard()
-        },
-        cancelRenamingPlayer() {
-            this.playerName = this.oldPlayerName
-            this.closeRenamingPlayer()
-        },
-        closeRenamingPlayer() {
-            this.renamePlayerStatus = false
-            this.rerenderCard()
-        },
-        renamePlayer() {
-            if (this.playerName != this.oldPlayerName) {
-                if (!this.gamesStore.players.validate(this.playerName)) {
-                    this.player.name = this.oldPlayerName
-                    return
-                }
-                this.gamesStore.players.renamePlayer(this.oldPlayerName, this.playerName)
-            }
-            this.closeRenamingPlayer()
-        }
-    },
-    data() {
-        return {
-            ButtonType
-        }
-    },
-    props: {
-        player: {
-            type: Player,
-            required: true,
-        }
-    },
-    components: {
-        IonPage, 
-        IonHeader, 
-        IonToolbar, 
-        IonTitle, 
-        IonContent, 
-        IonButtons, 
-        IonItem, 
-        IonButton, 
-        Button
-    },
+        gamesStore.players.renamePlayer(oldPlayerName.value, playerName.value)
+    }
+    oldPlayerName.value = playerName.value
+    openRename.value = false
 }
 </script>
