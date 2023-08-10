@@ -12,32 +12,9 @@
                 </ion-toolbar>
             </ion-header>
 
-            <Button @click="startAddGameDialog" :type="ButtonType.Add" />
+            <Button @click="startDialog" :type="ButtonType.Add" />
 
-            <ion-modal :is-open="addGameDialogIsOpen" @willDismiss="closeAddGameDialog">
-                <ion-header>
-                    <ion-toolbar>
-                        <ion-buttons slot="start">
-                            <Button @click="closeAddGameDialog" :type="ButtonType.Close" />
-                        </ion-buttons>
-                        <ion-title>Neues Spiel erstellen</ion-title>
-                        <ion-buttons slot="end">
-                            <Button @click="addGame" :type="ButtonType.Save" />
-                        </ion-buttons>
-                    </ion-toolbar>
-                </ion-header>
-
-                <ion-content>
-                    <ion-item>
-                        <h1>Spieler hinzufügen:</h1>
-                    </ion-item>
-                    <ion-item v-for="player in gamesStore.players.sorted()">
-                        <ion-checkbox slot="start" @ionChange="changePlayerIdStatus(player)" label-placement="end">{{
-                            player.name
-                        }}</ion-checkbox>
-                    </ion-item>
-                </ion-content>
-            </ion-modal>
+            <AddGameDialog @closed="closedDialog" :is-open="addGameDialogIsOpen" />
 
             <ion-item v-for="game in gamesStore.games.filter(GameType.Qwirkle).sorted()">
                 <GameCard :game="game" />
@@ -48,17 +25,17 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton, IonModal, IonCheckbox } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem } from '@ionic/vue';
 import GameCard from '@/components/GameCard.vue';
 import Button from '@/components/Button.vue';
 import { ButtonType } from '@/components/Button.vue';
 import { Game, GameType, Player } from '@/types/types';
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
 import { useGamesStore } from '@/stores/gameStorage';
+import AddGameDialog from '@/components/dialogs/AddGameDialog.vue';
 
 const addGameDialogIsOpen = ref(false)
 const gamesStore = useGamesStore()
-const playersToAdd: Set<Player> = new Set()
 
 gamesStore.players.add(new Player("Dominic"))
 gamesStore.players.add(new Player("Josy"))
@@ -74,29 +51,10 @@ for (let i = 0; i < 3; i++) {
     gamesStore.games.add(game)
 }
 
-const addGame = () => {
-    const newGame = new Game(GameType.Qwirkle)
-
-    playersToAdd.forEach((player) => {
-        newGame.add(player)
-    })
-
-    gamesStore.games.add(newGame)
-    closeAddGameDialog()
-    playersToAdd.clear()
-}
-const startAddGameDialog = () => {
+const startDialog = () => {
     addGameDialogIsOpen.value = true
 }
-const closeAddGameDialog = () => {
+const closedDialog = () => {
     addGameDialogIsOpen.value = false
-    playersToAdd.clear()
-}
-const changePlayerIdStatus = (player: Player) => {
-    if (playersToAdd.has(player)) {
-        playersToAdd.delete(player)
-    } else {
-        playersToAdd.add(player)
-    }
 }
 </script>

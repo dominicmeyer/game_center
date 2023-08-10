@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { IonModal, IonContent, IonToolbar, IonHeader, IonButtons, IonTitle } from '@ionic/vue';
-import Button, { ButtonType } from './Button.vue';
+import Button, { ButtonType } from '../Button.vue';
 import { Game, Player, Score } from '@/types/types';
 import { useGamesStore } from '@/stores/gameStorage';
 import { ref, watch } from 'vue';

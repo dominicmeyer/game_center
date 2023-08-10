@@ -30,7 +30,7 @@ import Button, { ButtonType } from './Button.vue';
 import { Game, Player } from '@/types/types';
 import { useGamesStore } from '@/stores/gameStorage';
 import { ref } from 'vue';
-import AddScoreDialog from './AddScoreDialog.vue';
+import AddScoreDialog from './dialogs/AddScoreDialog.vue';
 
 const props = defineProps({
     game: {
