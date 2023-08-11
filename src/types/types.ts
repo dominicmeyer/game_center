@@ -1,6 +1,6 @@
-import { Player, Players } from "./player"
-import { Score, Scores } from "./score"
-import { Game, GameType, Games } from "./game"
+import { Player } from "./player"
+import { Score } from "./score"
+import { Game, GameType } from "./game"
 import { GameStorage } from "./gameStorage"
 
-export { Player, Score, Game, GameType, GameStorage, Players, Games, Scores }
+export { Player, Score, Game, GameType, GameStorage }

@@ -10,6 +10,7 @@ import { Game, Player, Score } from '@/types/types';
 import { useGamesStore } from '@/stores/gameStorage';
 import { ref } from 'vue';
 import BaseDialog from './BaseDialog.vue';
+import { useScoresStore } from '@/stores/scoreStorage';
 
 const props = defineProps({
     player: {
@@ -30,11 +31,11 @@ const emit = defineEmits<{
     (event: "close"): void
 }>()
 
-const gamesStore = useGamesStore()
+const scoresStore = useScoresStore()
 const scoreToAdd = ref(0)
 
 const addScore = () => {
-    const latestScore = gamesStore.scores.findLatestScore(props.game, props.player)
+    const latestScore = scoresStore.findLatestScore(props.game, props.player)
     const newRound = latestScore?.round == null ? 1 : latestScore.round + 1
     const newScore = latestScore?.score == null ? scoreToAdd.value : latestScore.score + scoreToAdd.value
     const score = new Score(props.player, newScore, newRound, props.game.id)
@@ -43,7 +44,7 @@ const addScore = () => {
     console.log(newRound)
     console.log(newScore)
 
-    gamesStore.scores.add(score)
+    scoresStore.add(score)
 
     scoreToAdd.value = 0
     emit("close")

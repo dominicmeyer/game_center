@@ -3,7 +3,7 @@
         <ion-item>
             <h1>Spieler hinzufügen:</h1>
         </ion-item>
-        <ion-item v-for="player in gamesStore.players.sorted()">
+        <ion-item v-for="player in playersStore.array().sort((a,b) => a.name.localeCompare(b.name))">
             <ion-checkbox slot="start" @ionChange="changePlayerStatus(player)" label-placement="end">{{
                 player.name
             }}</ion-checkbox>
@@ -16,6 +16,7 @@ import { IonItem, IonCheckbox } from '@ionic/vue';
 import { Game, GameType, Player } from '@/types/types';
 import { useGamesStore } from '@/stores/gameStorage';
 import BaseDialog from './BaseDialog.vue';
+import { usePlayersStore } from '@/stores/playerStorage';
 
 const props = defineProps({
     isOpen: {
@@ -29,6 +30,7 @@ const emit = defineEmits<{
 }>()
 
 const gamesStore = useGamesStore()
+const playersStore = usePlayersStore()
 const playersToAdd: Set<Player> = new Set()
 
 const addGame = () => {
@@ -38,7 +40,7 @@ const addGame = () => {
         newGame.add(player)
     })
 
-    gamesStore.games.add(newGame)
+    gamesStore.add(newGame)
     close()
 }
 const close = () => {

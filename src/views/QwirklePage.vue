@@ -16,7 +16,7 @@
 
             <AddGameDialog @close="closeDialog" :is-open="addGameDialogIsOpen" />
 
-            <ion-item v-for="game in gamesStore.games.filter(GameType.Qwirkle).sorted()">
+            <ion-item v-for="game in gamesStore.filter(GameType.Qwirkle).sorted()">
                 <GameCard :game="game" />
             </ion-item>
 
@@ -33,22 +33,24 @@ import { Game, GameType, Player } from '@/types/types';
 import { ref } from 'vue';
 import { useGamesStore } from '@/stores/gameStorage';
 import AddGameDialog from '@/components/dialogs/AddGameDialog.vue';
+import { usePlayersStore } from '@/stores/playerStorage';
 
 const addGameDialogIsOpen = ref(false)
 const gamesStore = useGamesStore()
+const playersStore = usePlayersStore()
 
-gamesStore.players.add(new Player("Dominic"))
-gamesStore.players.add(new Player("Josy"))
-gamesStore.players.add(new Player("Anna"))
+playersStore.add(new Player("Dominic"))
+playersStore.add(new Player("Josy"))
+playersStore.add(new Player("Anna"))
 
 for (let i = 0; i < 3; i++) {
     const game = new Game(GameType.Qwirkle)
 
-    gamesStore.players.array().forEach((p) => {
+    playersStore.array().forEach((p) => {
         game.add(p)
     })
 
-    gamesStore.games.add(game)
+    gamesStore.add(game)
 }
 
 const startDialog = () => {

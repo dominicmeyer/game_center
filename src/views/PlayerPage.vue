@@ -16,7 +16,7 @@
             <Button @click="addPlayer" :type="ButtonType.Add" />
 
             <div :key="listKey">
-                <ion-item v-for="player in gamesStore.players.sorted()">
+                <ion-item v-for="player in playerStore.array().sort((a,b) => a.name.localeCompare(b.name))">
                     <PlayerCard :player="player" @delete="listKey++" />
                 </ion-item>
             </div>
@@ -27,23 +27,23 @@
 </template>
 
 <script lang="ts" setup>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonItem, IonButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem } from '@ionic/vue';
 import Button, { ButtonType } from '@/components/Button.vue';
-import { useGamesStore } from "@/stores/gameStorage"
 import { Player } from "@/types/types"
 import PlayerCard from '@/components/PlayerCard.vue';
 import { ref } from 'vue';
+import { usePlayersStore } from '@/stores/playerStorage';
 
-const gamesStore = useGamesStore()
+const playerStore = usePlayersStore()
 const addPlayerName = ref("")
 const listKey = ref(0)
 
 const addPlayer = () => {
-    if (!gamesStore.players.validate(addPlayerName.value)) {
+    if (!playerStore.validate(addPlayerName.value)) {
         return
     }
 
     addPlayerName.value = ""
-    gamesStore.players.add(new Player(addPlayerName.value))
+    playerStore.add(new Player(addPlayerName.value))
 }
 </script>

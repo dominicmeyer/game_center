@@ -1,6 +1,6 @@
-import { useGamesStore } from "@/stores/gameStorage"
-import { Game, Player } from "./types"
-import { Collection, IdentifiableByID, Sortable, Validator } from "./collection"
+import { Player } from "./types"
+import { IdentifiableByID } from "../stores/collection"
+import { useScoresStore } from "@/stores/scoreStorage"
 
 export class Score extends IdentifiableByID {
     private _player: Player
@@ -12,9 +12,7 @@ export class Score extends IdentifiableByID {
     static StartingRound = 0
 
     constructor(player: Player, score: number, round: number, gameId: number) {
-        const gameStorage = useGamesStore()
-        
-        super(gameStorage.scores)
+        super(useScoresStore())
         this._player = player
         this._score = score
         this._round = round
@@ -35,36 +33,5 @@ export class Score extends IdentifiableByID {
 
     get gameId() {
         return this._gameId
-    }
-}
-
-export class Scores 
-    extends Collection<Score>
-    implements Sortable<Score> {
-
-    constructor(items?: Score[]) {
-        super(items)
-    }
-
-    sorted(): Score[] {
-        return this.array().sort((a,b) => a.round - b.round)
-    }
-
-    filter(game: Game) {
-        return new Scores(this.array().filter((s) => s.gameId == game.id))
-    }
-
-    findHighestRound(game: Game) {
-        return this.filter(game).array().reduce((acc, s) => acc > s.round ? acc : s.round, 0)
-    }
-
-    findPlayerScores(game: Game, player: Player) {
-        return this.filter(game).array().filter((s) => s.player.equals(player))
-    }
-
-    findLatestScore(game: Game, player: Player) {
-        const playerScores = this.findPlayerScores(game, player)
-        const latestRound = playerScores.reduce((acc, s) => acc > s.round ? acc : s.round, 0)
-        return playerScores.find((s) => s.round == latestRound)
     }
 }

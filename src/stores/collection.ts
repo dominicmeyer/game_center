@@ -26,6 +26,7 @@ export interface Validator<T> {
 export interface DefaultCollection<T extends IdentifiableByID> {
     nextId(): number
     array(): T[]
+    set(): Set<T>
     add(value: T): void
     remove(value: T): void
 }
@@ -45,6 +46,9 @@ export class Collection<T extends IdentifiableByID>
     }
     array(): T[] {
         return Array.from(this.items)
+    }
+    set(): Set<T> {
+        return this.items
     }
     add(value: T): void {
         this.items.add(value)

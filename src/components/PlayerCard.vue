@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import Button, { ButtonType } from '@/components/Button.vue';
-import { useGamesStore } from "@/stores/gameStorage"
+import { usePlayersStore } from '@/stores/playerStorage';
 import { Player } from "@/types/types"
 import { ref } from 'vue';
 
@@ -30,7 +30,7 @@ const emit = defineEmits({
     delete: () => true
 })
 
-const gamesStore = useGamesStore()
+const playersStorage = usePlayersStore()
 const openRename = ref(false)
 const playerName = ref(props.player.name)
 const oldPlayerName = ref(props.player.name)
@@ -43,15 +43,15 @@ const cancelRename = () => {
     playerName.value = oldPlayerName.value
 }
 const removePlayer = () => {
-    gamesStore.players.remove(props.player)
+    playersStorage.remove(props.player)
     emit("delete")
 }
 const renamePlayer = () => {
     if (playerName.value != oldPlayerName.value) {
-        if (!gamesStore.players.validate(playerName.value)) {
+        if (!playersStorage.validate(playerName.value)) {
             return
         }
-        gamesStore.players.renamePlayer(oldPlayerName.value, playerName.value)
+        playersStorage.renamePlayer(oldPlayerName.value, playerName.value)
     }
     oldPlayerName.value = playerName.value
     openRename.value = false

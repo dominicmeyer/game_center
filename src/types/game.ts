@@ -1,15 +1,13 @@
 import { useGamesStore } from "@/stores/gameStorage"
 import { Player, Score } from "./types"
-import { Collection, IdentifiableByID, Sortable } from "./collection"
+import { Collection, IdentifiableByID, Sortable } from "../stores/collection"
 
 export class Game extends IdentifiableByID {
     private _type: GameType
     private _players: Set<Player>
 
     constructor(type: GameType) {
-        const gameStorage = useGamesStore()
-
-        super(gameStorage.games)
+        super(useGamesStore())
         this._type = type
         this._players = new Set()
     }
@@ -35,20 +33,4 @@ export class Game extends IdentifiableByID {
 
 export enum GameType {
     Qwirkle
-}
-
-export class Games extends Collection<Game>
-    implements Sortable<Game> {
-
-    constructor(items?: Game[] ) {
-        super(items)
-    }
-
-    sorted(): Game[] {
-        return this.array().sort((a,b) => b.id - a.id)
-    }
-
-    filter(gameType: GameType) {
-        return new Games(this.array().filter((g) => g.type == gameType))
-    }
 }
