@@ -18,7 +18,7 @@
                 <p>
                     <Button :type="ButtonType.Add" @click="openDialog(player)" />
                 </p>
-                <AddScoreDialog @closed="closedDialog(player)" :game="game" :player="player" :is-open="dialogControl.get(player)!" />
+                <AddScoreDialog @close="closeDialog(player)" :game="game" :player="player" :is-open="dialogControl.get(player)!" />
             </ion-item>
         </ion-card-content>
     </ion-card>
@@ -54,7 +54,7 @@ const playerScore = (player: Player) => {
 const openDialog = (player: Player) => {
     dialogControl.value.set(player, true)
 }
-const closedDialog = (player: Player) => {
+const closeDialog = (player: Player) => {
     dialogControl.value.set(player, false)
 }
 </script>

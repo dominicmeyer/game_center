@@ -1,30 +1,15 @@
 <template>
-    <ion-modal :is-open="isOpen" @willDismiss="close">
-        <ion-header>
-            <ion-toolbar>
-                <ion-buttons slot="start">
-                    <Button @click="close" :type="ButtonType.Close" />
-                </ion-buttons>
-                <ion-title>Neue Runde eintragen</ion-title>
-                <ion-buttons slot="end">
-                    <Button @click="addScore" :type="ButtonType.Save" />
-                </ion-buttons>
-            </ion-toolbar>
-        </ion-header>
-
-        <ion-content>
-            <label>Erzielte Punkte: </label>
-            <input type="number" v-model="scoreToAdd">
-        </ion-content>
-    </ion-modal>
+    <BaseDialog :is-open="isOpen" :title="'Neue Runde eintragen'" @close="emit('close')" @submit="addScore">
+        <label>Erzielte Punkte: </label>
+        <input type="number" v-model="scoreToAdd">
+    </BaseDialog>
 </template>
 
 <script setup lang="ts">
-import { IonModal, IonContent, IonToolbar, IonHeader, IonButtons, IonTitle } from '@ionic/vue';
-import Button, { ButtonType } from '../Button.vue';
 import { Game, Player, Score } from '@/types/types';
 import { useGamesStore } from '@/stores/gameStorage';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
+import BaseDialog from './BaseDialog.vue';
 
 const props = defineProps({
     player: {
@@ -41,31 +26,26 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits({
-    closed: () => true
-})
+const emit = defineEmits<{
+    (event: "close"): void
+}>()
 
-const isOpen = ref(props.isOpen)
 const gamesStore = useGamesStore()
 const scoreToAdd = ref(0)
 
-watch(props, (props) => {
-    isOpen.value = props.isOpen
-})
-
-const close = () => {
-    isOpen.value = false
-    emit("closed")
-}
 const addScore = () => {
     const latestScore = gamesStore.scores.findLatestScore(props.game, props.player)
     const newRound = latestScore?.round == null ? 1 : latestScore.round + 1
     const newScore = latestScore?.score == null ? scoreToAdd.value : latestScore.score + scoreToAdd.value
-    const score = new Score(props.player,newScore,newRound,props.game.id)
+    const score = new Score(props.player, newScore, newRound, props.game.id)
+
+    console.log(props.player)
+    console.log(newRound)
+    console.log(newScore)
 
     gamesStore.scores.add(score)
 
     scoreToAdd.value = 0
-    close()
+    emit("close")
 }
 </script>

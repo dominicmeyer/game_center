@@ -14,7 +14,7 @@
 
             <Button @click="startDialog" :type="ButtonType.Add" />
 
-            <AddGameDialog @closed="closedDialog" :is-open="addGameDialogIsOpen" />
+            <AddGameDialog @close="closeDialog" :is-open="addGameDialogIsOpen" />
 
             <ion-item v-for="game in gamesStore.games.filter(GameType.Qwirkle).sorted()">
                 <GameCard :game="game" />
@@ -54,7 +54,7 @@ for (let i = 0; i < 3; i++) {
 const startDialog = () => {
     addGameDialogIsOpen.value = true
 }
-const closedDialog = () => {
+const closeDialog = () => {
     addGameDialogIsOpen.value = false
 }
 </script>
