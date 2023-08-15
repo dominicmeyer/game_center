@@ -6,7 +6,7 @@
                 <Button @click="removeGame" :type="ButtonType.Delete" />
             </ion-card-title>
             <ion-card-subtitle>
-                Aktuelle Runde: {{ scoresStore.findHighestRound(game) }}
+                Aktuelle Runde: {{ scoresStore.highestRound(game) }}
             </ion-card-subtitle>
         </ion-card-header>
 
@@ -50,7 +50,7 @@ const removeGame = () => {
     gamesStore.remove(props.game)
 }
 const playerScore = (player: Player) => {
-    const latestScore = scoresStore.findLatestScore(props.game, player)
+    const latestScore = scoresStore.latestScore(props.game, player)
     return latestScore == null ? 0 : latestScore.score
 }
 const openDialog = (player: Player) => {

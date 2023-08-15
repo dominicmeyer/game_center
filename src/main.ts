@@ -26,11 +26,11 @@ import { createPinia } from 'pinia';
 
 const pinia = createPinia()
 const app = createApp(App)
-  .use(IonicVue)
-  .use(pinia)
-  .use(router);
+    .use(IonicVue)
+    .use(pinia)
+    .use(router);
 
 router.isReady()
-  .then(() => {
-    app.mount('#app');
-  });
+    .then(() => {
+        app.mount('#app');
+    });

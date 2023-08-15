@@ -1,15 +1,22 @@
 import { useGamesStore } from "@/stores/gameStorage"
-import { Player, Score } from "./types"
-import { Collection, IdentifiableByID, Sortable } from "../stores/collection"
+import { Player } from "./types"
+import { IdentifiableByID } from "./id"
+import { usePlayersStore } from "@/stores/playerStorage"
+import { useGamesPlayersStore } from "@/stores/gamesPlayerStorage"
 
 export class Game extends IdentifiableByID {
     private _type: GameType
-    private _players: Set<Player>
+    private playersGamesStorage = useGamesPlayersStore()
 
     constructor(type: GameType) {
         super(useGamesStore())
         this._type = type
-        this._players = new Set()
+    }
+
+    static parse(p: {_type: GameType, _id: number}) {
+        const game = new Game(p._type)
+        game.parse(p._id)
+        return game
     }
 
     get type() {
@@ -17,7 +24,7 @@ export class Game extends IdentifiableByID {
     }
 
     get players() {
-        return Array.from(this._players).sort((a, b) => a.name.localeCompare(b.name))
+        return this.fetchPlayers().sort((a, b) => a.name.localeCompare(b.name))
     }
 
     vsText() {
@@ -27,7 +34,13 @@ export class Game extends IdentifiableByID {
     }
 
     add(player: Player) {
-        this._players.add(player)
+        this.playersGamesStorage.add(this.id, player.id)
+    }
+
+    private fetchPlayers() {
+        const playersStorage = usePlayersStore()
+        const playerIds = this.playersGamesStorage.filter(this.id)
+        return playersStorage.players.filter((p) => playerIds.find(({ game, player }) => p.id == player))
     }
 }
 

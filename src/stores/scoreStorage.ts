@@ -1,41 +1,48 @@
 import { Game, Player, Score } from '@/types/types'
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import { Collection, Sortable } from './collection'
+import { Ref, computed, ref, watch } from 'vue'
+import { nextId as _nextId } from '../types/id'
 
 export const useScoresStore = defineStore('scores', () => {
-    const scores = ref(new Scores())
+    const storageKey = "piniaScoresStore"
+    const loaded = ref(false)
+    const _scores: Ref<Score[]> = ref([])
 
-    return scores
+    const initScores = localStorage.getItem(storageKey)
+    if (initScores != null && !loaded.value) {
+        const parsed = JSON.parse(initScores)
+        _scores.value = parsed.map((p: any) => Score.parse(p))
+        loaded.value = true
+    }
+
+    const scores = computed(() => _scores)
+    const nextId = computed(() => _nextId(_scores.value))
+
+    const sort = () => _scores.value = _scores.value.sort((a, b) => a.round - b.round)
+    const filter = (game: Game, player?: Player) => _scores.value.filter((s) => s.gameId == game.id && (player == null || player.id == s.playerId))
+    const highestRound = (game: Game) => filter(game).reduce((acc, s) => acc > s.round ? acc : s.round, 0)
+    const latestScore = (game: Game, player: Player) => filter(game, player).reduce((acc: Score | null, s) => acc == null ? s : acc.round > s.round ? acc : s, null)
+    const add = (score: Score) => {
+        if (_scores.value.find((s) => s.equals(score)) == null) {
+            _scores.value.push(score)
+        }
+    }
+    const remove = (score: Score) => {
+        _scores.value = _scores.value.filter((s) => !s.equals(score))
+    }
+
+    watch(_scores.value, (old) => {
+        sort()
+        localStorage.setItem(storageKey, JSON.stringify(_scores.value))
+    })
+
+    return {
+        scores,
+        nextId,
+        filter,
+        highestRound,
+        latestScore,
+        add,
+        remove
+    }
 })
-
-export class Scores 
-    extends Collection<Score>
-    implements Sortable<Score> {
-
-    constructor(items?: Score[]) {
-        super(items)
-    }
-
-    sorted(): Score[] {
-        return this.array().sort((a,b) => a.round - b.round)
-    }
-
-    filter(game: Game) {
-        return new Scores(this.array().filter((s) => s.gameId == game.id))
-    }
-
-    findHighestRound(game: Game) {
-        return this.filter(game).array().reduce((acc, s) => acc > s.round ? acc : s.round, 0)
-    }
-
-    findPlayerScores(game: Game, player: Player) {
-        return this.filter(game).array().filter((s) => s.player.equals(player))
-    }
-
-    findLatestScore(game: Game, player: Player) {
-        const playerScores = this.findPlayerScores(game, player)
-        const latestRound = playerScores.reduce((acc, s) => acc > s.round ? acc : s.round, 0)
-        return playerScores.find((s) => s.round == latestRound)
-    }
-}

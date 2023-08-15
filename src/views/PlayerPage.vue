@@ -16,7 +16,7 @@
             <Button @click="addPlayer" :type="ButtonType.Add" />
 
             <div :key="listKey">
-                <ion-item v-for="player in playerStore.array().sort((a,b) => a.name.localeCompare(b.name))">
+                <ion-item v-for="player in playerStore.players">
                     <PlayerCard :player="player" @delete="listKey++" />
                 </ion-item>
             </div>
@@ -35,6 +35,7 @@ import { ref } from 'vue';
 import { usePlayersStore } from '@/stores/playerStorage';
 
 const playerStore = usePlayersStore()
+
 const addPlayerName = ref("")
 const listKey = ref(0)
 

@@ -1,4 +1,4 @@
-import { IdentifiableByID } from "../stores/collection"
+import { IdentifiableByID } from "./id"
 import { usePlayersStore } from "@/stores/playerStorage"
 
 export class Player 
@@ -7,7 +7,15 @@ export class Player
     name: string
 
     constructor(name: string) {
-        super(usePlayersStore())
+        const store = usePlayersStore()
+
+        super(store)
         this.name = name
+    }
+
+    static parse(p: {name: string, _id: number}) {
+        const player = new Player(p.name)
+        player.parse(p._id)
+        return player
     }
 }

@@ -3,7 +3,7 @@
         <ion-item>
             <h1>Spieler hinzufügen:</h1>
         </ion-item>
-        <ion-item v-for="player in playersStore.array().sort((a,b) => a.name.localeCompare(b.name))">
+        <ion-item v-for="player in playersStore.players.value">
             <ion-checkbox slot="start" @ionChange="changePlayerStatus(player)" label-placement="end">{{
                 player.name
             }}</ion-checkbox>

@@ -35,10 +35,10 @@ const scoresStore = useScoresStore()
 const scoreToAdd = ref(0)
 
 const addScore = () => {
-    const latestScore = scoresStore.findLatestScore(props.game, props.player)
+    const latestScore = scoresStore.latestScore(props.game, props.player)
     const newRound = latestScore?.round == null ? 1 : latestScore.round + 1
     const newScore = latestScore?.score == null ? scoreToAdd.value : latestScore.score + scoreToAdd.value
-    const score = new Score(props.player, newScore, newRound, props.game.id)
+    const score = new Score(props.player.id, newScore, newRound, props.game.id)
 
     console.log(props.player)
     console.log(newRound)
