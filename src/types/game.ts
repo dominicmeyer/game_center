@@ -34,6 +34,7 @@ export class Game extends IdentifiableByID {
     }
 
     add(player: Player) {
+        console.log("GameId: " + this.id + " PlayerId: " + player.id)
         this.playersGamesStorage.add(this.id, player.id)
     }
 

@@ -15,7 +15,7 @@ export const useScoresStore = defineStore('scores', () => {
         loaded.value = true
     }
 
-    const scores = computed(() => _scores)
+    const scores = computed(() => _scores.value)
     const nextId = computed(() => _nextId(_scores.value))
 
     const sort = () => _scores.value = _scores.value.sort((a, b) => a.round - b.round)
@@ -25,14 +25,14 @@ export const useScoresStore = defineStore('scores', () => {
     const add = (score: Score) => {
         if (_scores.value.find((s) => s.equals(score)) == null) {
             _scores.value.push(score)
+            sort()
         }
     }
     const remove = (score: Score) => {
-        _scores.value = _scores.value.filter((s) => !s.equals(score))
+        _scores.value.splice(_scores.value.indexOf(score), 1)
     }
 
     watch(_scores.value, (old) => {
-        sort()
         localStorage.setItem(storageKey, JSON.stringify(_scores.value))
     })
 

@@ -6,7 +6,7 @@
                 <Button @click="removeGame" :type="ButtonType.Delete" />
             </ion-card-title>
             <ion-card-subtitle>
-                Aktuelle Runde: {{ scoresStore.highestRound(game) }}
+                Aktuelle Runde: {{ scoresStore.highestRound(game) }} ID: {{ game.id }}
             </ion-card-subtitle>
         </ion-card-header>
 
@@ -32,6 +32,7 @@ import { useGamesStore } from '@/stores/gameStorage';
 import { ref } from 'vue';
 import AddScoreDialog from './dialogs/AddScoreDialog.vue';
 import { useScoresStore } from '@/stores/scoreStorage';
+import { useGamesPlayersStore } from '@/stores/gamesPlayerStorage';
 
 const props = defineProps({
     game: {
@@ -41,6 +42,7 @@ const props = defineProps({
 })
 
 const gamesStore = useGamesStore()
+const gamesPlayersStore = useGamesPlayersStore()
 const scoresStore = useScoresStore()
 const dialogControl = ref(
     new Map(props.game.players.map((p) => [p, false]))

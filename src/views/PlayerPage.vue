@@ -16,11 +16,10 @@
             <Button @click="addPlayer" :type="ButtonType.Add" />
 
             <div :key="listKey">
-                <ion-item v-for="player in playerStore.players">
+                <ion-item v-for="player in playerStore.players.filter((p) => p.id != 0)">
                     <PlayerCard :player="player" @delete="listKey++" />
                 </ion-item>
             </div>
-
 
         </ion-content>
     </ion-page>
@@ -44,7 +43,8 @@ const addPlayer = () => {
         return
     }
 
-    addPlayerName.value = ""
     playerStore.add(new Player(addPlayerName.value))
+    addPlayerName.value = ""
+    listKey.value++
 }
 </script>

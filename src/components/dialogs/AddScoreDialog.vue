@@ -7,7 +7,6 @@
 
 <script setup lang="ts">
 import { Game, Player, Score } from '@/types/types';
-import { useGamesStore } from '@/stores/gameStorage';
 import { ref } from 'vue';
 import BaseDialog from './BaseDialog.vue';
 import { useScoresStore } from '@/stores/scoreStorage';

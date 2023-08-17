@@ -2,11 +2,14 @@ import { nextId as _nextId } from "@/types/id"
 import { Player } from "@/types/types"
 import { defineStore } from "pinia"
 import { Ref, computed, ref, watch } from "vue"
+import { useGamesPlayersStore } from "./gamesPlayerStorage"
+import { deletedPlayer } from "@/types/player"
 
 export const usePlayersStore = defineStore("players", () => {
     const storageKey = "piniaPlayersStore"
     const loaded = ref(false)
     const _players: Ref<Player[]> = ref([])
+    const gamesPlayersStore = useGamesPlayersStore()
 
     const initPlayers = localStorage.getItem(storageKey)
     if (initPlayers != null && !loaded.value) {
@@ -23,10 +26,12 @@ export const usePlayersStore = defineStore("players", () => {
     const add = (player: Player) => {
         if (findPlayer(player.name) == null) {
             _players.value.push(player)
+            sort()
         }
     }
     const remove = (player: Player) => {
-        _players.value = _players.value.filter((p) => !p.equals(player))
+        _players.value.splice(_players.value.indexOf(player), 1)
+        gamesPlayersStore.remove(undefined, player.id)
     }
     const validate = (name: string) => {
         const contains = findPlayer(name) != null
@@ -43,9 +48,12 @@ export const usePlayersStore = defineStore("players", () => {
     }
 
     watch(_players.value, (old) => {
-        sort()
         localStorage.setItem(storageKey, JSON.stringify(_players.value))
     })
+
+    if (!_players.value.includes(deletedPlayer())) {
+        add(deletedPlayer())
+    }
 
     return {
         players,

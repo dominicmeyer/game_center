@@ -3,7 +3,7 @@
         <ion-item>
             <h1>Spieler hinzufügen:</h1>
         </ion-item>
-        <ion-item v-for="player in playersStore.players.value">
+        <ion-item v-for="player in playersStore.players.filter((p) => p.id != 0)">
             <ion-checkbox slot="start" @ionChange="changePlayerStatus(player)" label-placement="end">{{
                 player.name
             }}</ion-checkbox>

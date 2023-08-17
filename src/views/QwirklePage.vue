@@ -40,15 +40,20 @@ const gamesStore = useGamesStore()
 const playersStore = usePlayersStore()
 
 onMounted(() => {
-    if (playersStore.players.length == 0) {
-        playersStore.add(new Player("Dominic"))
-        playersStore.add(new Player("Josy"))
-        playersStore.add(new Player("Anna"))
+    if (gamesStore.games.length == 0) {
+        const playersNames = ["Dominic", "Josy", "Anna"]
+        let players: Player[] = []
+
+        playersNames.forEach((n) => {
+            const player = new Player(n)
+            playersStore.add(player)
+            players.push(player)
+        })
 
         for (let i = 0; i < 3; i++) {
             let game = new Game(GameType.Qwirkle)
 
-            playersStore.players.forEach((p) => {
+            players.forEach((p) => {
                 game.add(p)
             })
             

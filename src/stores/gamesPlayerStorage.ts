@@ -19,8 +19,27 @@ export const useGamesPlayersStore = defineStore('gamesPlayers', () => {
             _playersGames.value.push({ game: gameId, player: playerId })
         }
     }
-    const remove = (gameId: number, playerId: number) => {
-        _playersGames.value = _playersGames.value.filter(({ game, player }) => !(game == gameId && player == playerId))
+    const remove = (gameId?: number, playerId?: number) => {
+        if (gameId != null && playerId != null) {
+            const i = _playersGames.value.indexOf({
+                game: gameId,
+                player: playerId
+            })
+            _playersGames.value.splice(i, 1)
+            return
+        }
+
+        for (let i = 0; i < _playersGames.value.length; i++) {
+            const e = _playersGames.value.at(i)!
+
+            if (gameId != null && gameId == e.game) {
+                _playersGames.value.splice(i--, 1)
+            }
+
+            if (playerId != null && playerId == e.player) {
+                e.player = 0
+            }
+        }
     }
 
     watch(_playersGames.value, (old) => {
