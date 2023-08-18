@@ -3,14 +3,15 @@ import { Player } from "./types"
 import { IdentifiableByID } from "./id"
 import { usePlayersStore } from "@/stores/playerStorage"
 import { useGamesPlayersStore } from "@/stores/gamesPlayerStorage"
+import { GameType } from "./types"
 
 export class Game extends IdentifiableByID {
-    private _type: GameType
+    private _typeId: number
     private playersGamesStorage = useGamesPlayersStore()
 
     constructor(type: GameType) {
         super(useGamesStore())
-        this._type = type
+        this._typeId = type.id
     }
 
     static parse(p: {_type: GameType, _id: number}) {
@@ -19,8 +20,8 @@ export class Game extends IdentifiableByID {
         return game
     }
 
-    get type() {
-        return this._type
+    get typeId() {
+        return this._typeId
     }
 
     get players() {
@@ -43,8 +44,4 @@ export class Game extends IdentifiableByID {
         const playerIds = this.playersGamesStorage.filter(this.id)
         return playersStorage.players.filter((p) => playerIds.find(({ game, player }) => p.id == player))
     }
-}
-
-export enum GameType {
-    Qwirkle
 }

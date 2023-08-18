@@ -21,7 +21,8 @@ export class Player
 }
 
 export const deletedPlayer = () => {
-    const player = new Player("Gelöschter Spieler")
-    player.parse(0)
-    return player
+    return Player.parse({
+        name: "Gelöschter Spieler",
+        _id: 0
+    })
 }

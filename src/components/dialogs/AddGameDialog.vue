@@ -22,6 +22,10 @@ const props = defineProps({
     isOpen: {
         type: Boolean,
         required: true
+    },
+    gameType: {
+        type: GameType,
+        required: true
     }
 })
 
@@ -34,7 +38,7 @@ const playersStore = usePlayersStore()
 const playersToAdd: Set<Player> = new Set()
 
 const addGame = () => {
-    const newGame = new Game(GameType.Qwirkle)
+    const newGame = new Game(props.gameType)
 
     playersToAdd.forEach((player) => {
         newGame.add(player)

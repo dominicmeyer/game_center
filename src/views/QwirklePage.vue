@@ -14,9 +14,9 @@
 
             <Button @click="startDialog" :type="ButtonType.Add" />
 
-            <AddGameDialog @close="closeDialog" :is-open="addGameDialogIsOpen" />
+            <AddGameDialog @close="closeDialog" :is-open="addGameDialogIsOpen" :game-type="qwirkleGameType()" />
 
-            <ion-item v-for="game in gamesStore.filter(GameType.Qwirkle)">
+            <ion-item v-for="game in gamesStore.filter(qwirkleGameType())">
                 <GameCard :game="game" />
             </ion-item>
 
@@ -29,7 +29,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem } from '@
 import GameCard from '@/components/GameCard.vue';
 import Button from '@/components/Button.vue';
 import { ButtonType } from '@/components/Button.vue';
-import { Game, GameType, Player } from '@/types/types';
+import { Game, GameType, Player, qwirkleGameType } from '@/types/types';
 import { onMounted, ref } from 'vue';
 import { useGamesStore } from '@/stores/gameStorage';
 import AddGameDialog from '@/components/dialogs/AddGameDialog.vue';
@@ -51,7 +51,7 @@ onMounted(() => {
         })
 
         for (let i = 0; i < 3; i++) {
-            let game = new Game(GameType.Qwirkle)
+            let game = new Game(qwirkleGameType())
 
             players.forEach((p) => {
                 game.add(p)
