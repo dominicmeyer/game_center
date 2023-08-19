@@ -1,28 +1,42 @@
-import { Player } from "./types"
+import { IdentifiableByID } from "./id"
+import { useScoresStore } from "@/stores/scoreStorage"
 
-export class Score {
-    private player: Player
-    private score: number
-    private round: number
+export class Score extends IdentifiableByID {
+    private _playerId: number
+    private _score: number
+    private _round: number
+    private _gameId: number
 
     static StartingScore = 0
     static StartingRound = 0
 
-    constructor(player: Player, score?: number, round?: number) {
-        this.player = player
-        this.score = score == null ? Score.StartingScore : score
-        this.round = round == null ? Score.StartingRound : round
+    constructor(playerId: number, score: number, round: number, gameId: number) {
+        super(useScoresStore())
+        this._playerId = playerId
+        this._score = score
+        this._round = round
+        this._gameId = gameId
     }
 
-    getPlayer() {
-        return this.player
+    static parse(p: {_playerId: number, _score: number, _round: number, _gameId: number, _id: number}) {
+        const _score = new Score(p._playerId, p._score, p._round, p._gameId)
+        _score.parse(p._id)
+        return _score
     }
 
-    getScore() {
-        return this.score
+    get playerId() {
+        return this._playerId
     }
 
-    getRound() {
-        return this.round
+    get score() {
+        return this._score
+    }
+
+    get round() {
+        return this._round
+    }
+
+    get gameId() {
+        return this._gameId
     }
 }

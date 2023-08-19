@@ -5,44 +5,43 @@
 </template>
   
 <script lang="ts">
-import { IonButton, IonIcon } from '@ionic/vue';
-import { PropType, defineComponent } from 'vue';
-import { trashOutline, addOutline, closeOutline, saveOutline, squareOutline } from 'ionicons/icons';
-
 export enum ButtonType {
-  Delete, Add, Close, Save
+  Delete, Add, Close, Save, Edit
 }
+</script>
 
-export default defineComponent({
-  components: { IonButton, IonIcon },
-  props: {
-    type: {
-      type: Number as PropType<ButtonType>,
-      required: true
-    }
-  },
-  setup(props) {
-    let icon
+<script lang="ts" setup>
+import { IonButton, IonIcon } from '@ionic/vue';
+import { PropType, ref } from 'vue';
+import { trashOutline, addOutline, closeOutline, saveOutline, squareOutline, pencilOutline } from 'ionicons/icons';
 
-    switch (props.type) {
-      case ButtonType.Add:
-        icon = addOutline
-        break;
-      case ButtonType.Delete:
-        icon = trashOutline
-        break;
-      case ButtonType.Close:
-        icon = closeOutline
-        break;
-      case ButtonType.Save:
-        icon = saveOutline
-        break;
-      default:
-        icon = squareOutline
-        break;
-    }
+const props = defineProps({
+  type: {
+    type: Number as PropType<ButtonType>,
+    required: true
+  }
+})
 
-    return { icon };
-  },
-});
+const icon = ref("")
+
+switch (props.type) {
+  case ButtonType.Add:
+    icon.value = addOutline
+    break;
+  case ButtonType.Delete:
+    icon.value = trashOutline
+    break;
+  case ButtonType.Close:
+    icon.value = closeOutline
+    break;
+  case ButtonType.Save:
+    icon.value = saveOutline
+    break;
+  case ButtonType.Edit:
+    icon.value = pencilOutline
+    break;
+  default:
+    icon.value = squareOutline
+    break;
+}
 </script>

@@ -1,27 +1,38 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import TabsPage from '../views/TabsPage.vue'
-import QwirklePage from '@/views/QwirklePage.vue';
+import PlayerPage from '@/views/tabs/PlayerPage.vue';
+import SettingsPage from "@/views/tabs/SettingsPage.vue"
+import GamesPage from '@/views/tabs/GamesPage.vue';
+import GameTypesPage from "@/views/tabs/settings/GameTypesPage.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/games/qwirkle'
-  },
-  {
-    path: '/games/',
     component: TabsPage,
     children: [
       {
-        path: '',
-        redirect: '/games/qwirkle'
+        path: "/",
+        redirect: "/players"
       },
       {
-        path: 'qwirkle',
-        component: QwirklePage
-      }
+        path: "settings/",
+        component: SettingsPage
+      },
+      {
+        path: "settings/game_types/",
+        component: GameTypesPage
+      },
+      {
+        path: "players/",
+        component: PlayerPage
+      },
+      {
+        path: 'games/',
+        component: GamesPage
+      },
     ]
-  }
+  },
 ]
 
 const router = createRouter({

@@ -1,83 +1,47 @@
-import { Player, Score } from "./types"
+import { useGamesStore } from "@/stores/gameStorage"
+import { Player } from "./player"
+import { IdentifiableByID } from "./id"
+import { usePlayersStore } from "@/stores/playerStorage"
+import { useGamesPlayersStore } from "@/stores/gamesPlayerStorage"
+import { GameType } from "./gameType"
 
-export class Game {
-    private type: GameType
-    private gameNumber: number
-    private scores: Score[]
+export class Game extends IdentifiableByID {
+    private _typeId: number
+    private playersGamesStorage = useGamesPlayersStore()
 
-    constructor(type: GameType, gameNumber: number, scores: Score[]) {
-        this.type = type
-        this.scores = scores
-        this.gameNumber = gameNumber
+    constructor(typeId: number) {
+        super(useGamesStore())
+        this._typeId = typeId
     }
 
-    signature() {
-        return `${this.type}.${this.gameNumber}`
+    static parse(p: {_typeId: number, _id: number}) {
+        const game = new Game(p._typeId)
+        game.parse(p._id)
+        return game
     }
 
-    equals(otherGame: Game) {
-        return this.signature() == otherGame.signature()
+    get typeId() {
+        return this._typeId
     }
 
-    getType() {
-        return this.type
+    get players() {
+        return this.fetchPlayers().sort((a, b) => a.name.localeCompare(b.name))
     }
 
-    getGameNumber() {
-        return this.gameNumber
-    }
-
-    getScores() {
-        return this.scores
-    }
-
-    getPlayerScores(player: Player) {
-        return this.getScores().filter((s: Score) => s.getPlayer().equals(player))
-    }
-
-    getLatestScore(player?: Player) {
-        const scores = player != null ? this.getPlayerScores(player) : this.getScores()
-
-        if (scores.length == 0) {
-            return null
-        }
-
-        return scores.reduce((acc, s) => acc.getRound() > s.getRound() ? acc : s)
-    }
-
-    getPlayers() {
-        let players: Set<Player> = new Set()
-
-        this.getScores().forEach((s) => players.add(s.getPlayer()))
-
-        return Array.from(players).sort((a, b) => a.getName().localeCompare(b.getName()))
-    }
-
-    getVsText() {
-        return this.getPlayers().reduce((acc, p, i) => {
-            return i == 0 ? p.getName() : `${acc} vs ${p.getName()}`
+    vsText() {
+        return this.players.reduce((acc, p, i) => {
+            return i == 0 ? p.name : `${acc} vs ${p.name}`
         }, "")
     }
 
-    addPlayer(name: string) {
-        this.scores.push(new Score(new Player(name)))
+    add(player: Player) {
+        console.log("GameId: " + this.id + " PlayerId: " + player.id)
+        this.playersGamesStorage.add(this.id, player.id)
     }
 
-    addToPlayerScore(player: Player, round: number, newScore: number) {
-        this.scores.push(new Score(player, newScore, round))
-    }
-}
-
-export enum GameType {
-    Qwirkle
-}
-
-export class QwirkleGame extends Game {
-    constructor(gameNumber: number, scores: Score[]) {
-        super(QwirkleGame.getType(), gameNumber, scores)
-    }
-
-    public static getType() {
-        return GameType.Qwirkle
+    private fetchPlayers() {
+        const playersStorage = usePlayersStore()
+        const playerIds = this.playersGamesStorage.filter(this.id)
+        return playersStorage.players.filter((p) => playerIds.find(({ game, player }) => p.id == player))
     }
 }
