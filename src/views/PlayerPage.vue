@@ -28,7 +28,7 @@
 <script lang="ts" setup>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem } from '@ionic/vue';
 import Button, { ButtonType } from '@/components/Button.vue';
-import { Player } from "@/types/types"
+import { Player } from "@/types/player"
 import PlayerCard from '@/components/PlayerCard.vue';
 import { ref } from 'vue';
 import { usePlayersStore } from '@/stores/playerStorage';

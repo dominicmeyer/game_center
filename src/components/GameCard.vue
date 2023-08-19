@@ -27,12 +27,13 @@
 <script lang="ts" setup>
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonItem } from '@ionic/vue';
 import Button, { ButtonType } from './Button.vue';
-import { Game, Player } from '@/types/types';
 import { useGamesStore } from '@/stores/gameStorage';
 import { ref } from 'vue';
 import AddScoreDialog from './dialogs/AddScoreDialog.vue';
 import { useScoresStore } from '@/stores/scoreStorage';
 import { useGamesPlayersStore } from '@/stores/gamesPlayerStorage';
+import { Game } from '@/types/game';
+import { Player } from '@/types/player';
 
 const props = defineProps({
     game: {

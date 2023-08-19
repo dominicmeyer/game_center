@@ -19,6 +19,7 @@ export const useGameTypesStore = defineStore("gameTypes", () => {
     const nextId = computed(() => _nextId(_gameTypes.value))
 
     const sort = () => _gameTypes.value = _gameTypes.value.sort((a, b) => b.id - a.id)
+    const get = (id: number) => _gameTypes.value.find((t) => t.id == id)
     const add = (gameType: GameType) => {
         if (_gameTypes.value.find((g) => g.equals(gameType)) == null) {
             _gameTypes.value.push(gameType)
@@ -40,6 +41,7 @@ export const useGameTypesStore = defineStore("gameTypes", () => {
     return {
         gameTypes,
         nextId,
+        get,
         add,
         remove
     }

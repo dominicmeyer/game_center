@@ -1,21 +1,21 @@
 import { useGamesStore } from "@/stores/gameStorage"
-import { Player } from "./types"
+import { Player } from "./player"
 import { IdentifiableByID } from "./id"
 import { usePlayersStore } from "@/stores/playerStorage"
 import { useGamesPlayersStore } from "@/stores/gamesPlayerStorage"
-import { GameType } from "./types"
+import { GameType } from "./gameType"
 
 export class Game extends IdentifiableByID {
     private _typeId: number
     private playersGamesStorage = useGamesPlayersStore()
 
-    constructor(type: GameType) {
+    constructor(typeId: number) {
         super(useGamesStore())
-        this._typeId = type.id
+        this._typeId = typeId
     }
 
-    static parse(p: {_type: GameType, _id: number}) {
-        const game = new Game(p._type)
+    static parse(p: {_typeId: number, _id: number}) {
+        const game = new Game(p._typeId)
         game.parse(p._id)
         return game
     }

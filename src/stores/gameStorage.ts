@@ -1,8 +1,9 @@
-import { Game, GameType } from '@/types/types'
 import { defineStore } from 'pinia'
 import { Ref, computed, ref, watch } from 'vue'
 import { nextId as _nextId } from '../types/id'
 import { useGamesPlayersStore } from './gamesPlayerStorage'
+import { Game } from '@/types/game'
+import { GameType } from '@/types/gameType'
 
 export const useGamesStore = defineStore('games', () => {
     const storageKey = "piniaGamesStore"

@@ -1,5 +1,5 @@
 import { nextId as _nextId } from "@/types/id"
-import { Player } from "@/types/types"
+import { Player } from "@/types/player"
 import { defineStore } from "pinia"
 import { Ref, computed, ref, watch } from "vue"
 import { useGamesPlayersStore } from "./gamesPlayerStorage"

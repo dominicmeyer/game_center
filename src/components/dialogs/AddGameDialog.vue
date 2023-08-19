@@ -13,10 +13,12 @@
 
 <script setup lang="ts">
 import { IonItem, IonCheckbox } from '@ionic/vue';
-import { Game, GameType, Player } from '@/types/types';
 import { useGamesStore } from '@/stores/gameStorage';
 import BaseDialog from './BaseDialog.vue';
 import { usePlayersStore } from '@/stores/playerStorage';
+import { Player } from '@/types/player';
+import { GameType } from '@/types/gameType';
+import { Game } from '@/types/game';
 
 const props = defineProps({
     isOpen: {
@@ -38,7 +40,7 @@ const playersStore = usePlayersStore()
 const playersToAdd: Set<Player> = new Set()
 
 const addGame = () => {
-    const newGame = new Game(props.gameType)
+    const newGame = new Game(props.gameType.id)
 
     playersToAdd.forEach((player) => {
         newGame.add(player)

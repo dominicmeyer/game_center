@@ -16,7 +16,7 @@
 <script lang="ts" setup>
 import Button, { ButtonType } from '@/components/Button.vue';
 import { usePlayersStore } from '@/stores/playerStorage';
-import { Player } from "@/types/types"
+import { Player } from "@/types/player"
 import { ref } from 'vue';
 
 const props = defineProps({

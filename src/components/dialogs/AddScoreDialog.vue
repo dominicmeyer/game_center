@@ -6,10 +6,12 @@
 </template>
 
 <script setup lang="ts">
-import { Game, Player, Score } from '@/types/types';
 import { ref } from 'vue';
 import BaseDialog from './BaseDialog.vue';
 import { useScoresStore } from '@/stores/scoreStorage';
+import { Score } from '@/types/score';
+import { Player } from '@/types/player';
+import { Game } from '@/types/game';
 
 const props = defineProps({
     player: {
