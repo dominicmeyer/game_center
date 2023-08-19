@@ -21,7 +21,7 @@ export const useGameTypesStore = defineStore("gameTypes", () => {
     const sort = () => _gameTypes.value = _gameTypes.value.sort((a, b) => b.id - a.id)
     const get = (id: number) => _gameTypes.value.find((t) => t.id == id)
     const add = (gameType: GameType) => {
-        if (_gameTypes.value.find((g) => g.equals(gameType)) == null) {
+        if (_gameTypes.value.find((g) => g === gameType) == null) {
             _gameTypes.value.push(gameType)
             sort()
         }
