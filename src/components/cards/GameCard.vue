@@ -34,7 +34,7 @@ import { useScoresStore } from '@/stores/scoreStorage';
 import { useGamesPlayersStore } from '@/stores/gamesPlayerStorage';
 import { Game } from '@/types/game';
 import { Player } from '@/types/player';
-
+props
 const props = defineProps({
     game: {
         type: Game,
