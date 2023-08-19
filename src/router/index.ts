@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 import TabsPage from '../views/TabsPage.vue'
-import PlayerPage from '@/views/PlayerPage.vue';
-import SettingsPage from "@/views/SettingsPage.vue"
-import GamesPage from '@/views/GamesPage.vue';
+import PlayerPage from '@/views/tabs/PlayerPage.vue';
+import SettingsPage from "@/views/tabs/SettingsPage.vue"
+import GamesPage from '@/views/tabs/GamesPage.vue';
+import GameTypesPage from "@/views/tabs/settings/GameTypesPage.vue"
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -15,15 +16,19 @@ const routes: Array<RouteRecordRaw> = [
         redirect: "/players"
       },
       {
-        path: "settings",
+        path: "settings/",
         component: SettingsPage
       },
       {
-        path: "players",
+        path: "settings/game_types/",
+        component: GameTypesPage
+      },
+      {
+        path: "players/",
         component: PlayerPage
       },
       {
-        path: 'games',
+        path: 'games/',
         component: GamesPage
       },
     ]

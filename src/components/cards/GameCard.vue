@@ -26,10 +26,10 @@
   
 <script lang="ts" setup>
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonItem } from '@ionic/vue';
-import Button, { ButtonType } from './Button.vue';
+import Button, { ButtonType } from '@/components/Button.vue';
 import { useGamesStore } from '@/stores/gameStorage';
 import { ref } from 'vue';
-import AddScoreDialog from './dialogs/AddScoreDialog.vue';
+import AddScoreDialog from '@/components/dialogs/AddScoreDialog.vue';
 import { useScoresStore } from '@/stores/scoreStorage';
 import { useGamesPlayersStore } from '@/stores/gamesPlayerStorage';
 import { Game } from '@/types/game';

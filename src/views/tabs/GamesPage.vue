@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonSelect, IonSelectOption } from '@ionic/vue';
-import GameCard from '@/components/GameCard.vue';
+import GameCard from '@/components/cards/GameCard.vue';
 import Button from '@/components/Button.vue';
 import { ButtonType } from '@/components/Button.vue';
 import { onMounted, ref } from 'vue';
