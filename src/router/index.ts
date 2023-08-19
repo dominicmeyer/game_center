@@ -4,7 +4,7 @@ import TabsPage from '../views/TabsPage.vue'
 import PlayerPage from '@/views/tabs/PlayerPage.vue';
 import SettingsPage from "@/views/tabs/SettingsPage.vue"
 import GamesPage from '@/views/tabs/GamesPage.vue';
-import GameTypesPage from "@/views/tabs/settings/GameTypesPage.vue"
+import GameTypesPage from "@/views/tabs/settings/GameTypesPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {

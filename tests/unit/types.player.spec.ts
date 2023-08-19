@@ -1,15 +1,18 @@
-import { Player } from "@/types/types.ts";
+import { Player } from "@/types/player";
+import { createPinia, setActivePinia } from "pinia";
 import { describe, expect, test } from 'vitest';
 
-const player1 = new Player("PlayerOne")
-const player2 = new Player("PlayerTwo")
-
-describe("Player Tests: equals", () => {
-    test("Equals", () => {
-        expect(player1.equals(player1),"Equals should be true")
+describe("Score Tests", () => {
+    beforeEach(() => {
+        setActivePinia(createPinia())
     })
 
-    test("Equals not", () => {
-        expect(!player1.equals(player2),"Equals should be false")
+    test("Parse", () => {
+        const player = new Player("Test")
+        const json = JSON.stringify(player)
+        const parsed = Player.parse(JSON.parse(json))
+
+        expect(parsed instanceof Player)
+        expect(parsed === player)
     })
 })
