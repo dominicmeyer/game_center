@@ -25,7 +25,7 @@ export const useScoresStore = defineStore('scores', () => {
     const highestRound = (game: Game) => filter(game).reduce((acc, s) => acc > s.round ? acc : s.round, 0)
     const latestScore = (game: Game, player: Player) => filter(game, player).reduce((acc: Score | null, s) => acc == null ? s : acc.round > s.round ? acc : s, null)
     const add = (score: Score) => {
-        if (_scores.value.find((s) => s.equals(score)) == null) {
+        if (_scores.value.find((s) => s === score) == null) {
             _scores.value.push(score)
             sort()
         }

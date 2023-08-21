@@ -31,7 +31,7 @@ import Button, { ButtonType } from '@/components/Button.vue';
 import { Player } from "@/types/player"
 import PlayerCard from '@/components/cards/PlayerCard.vue';
 import { ref } from 'vue';
-import { usePlayersStore } from '@/stores/playerStorage';
+import { playerNameAlert, usePlayersStore } from '@/stores/playerStorage';
 
 const playerStore = usePlayersStore()
 
@@ -40,6 +40,7 @@ const listKey = ref(0)
 
 const addPlayer = () => {
     if (!playerStore.validate(addPlayerName.value)) {
+        playerNameAlert(addPlayerName.value)
         return
     }
 

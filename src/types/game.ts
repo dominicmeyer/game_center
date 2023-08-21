@@ -3,11 +3,9 @@ import { Player } from "./player"
 import { IdentifiableByID } from "./id"
 import { usePlayersStore } from "@/stores/playerStorage"
 import { useGamesPlayersStore } from "@/stores/gamesPlayerStorage"
-import { GameType } from "./gameType"
 
 export class Game extends IdentifiableByID {
     private _typeId: number
-    private playersGamesStorage = useGamesPlayersStore()
 
     constructor(typeId: number) {
         super(useGamesStore())
@@ -35,13 +33,12 @@ export class Game extends IdentifiableByID {
     }
 
     add(player: Player) {
-        console.log("GameId: " + this.id + " PlayerId: " + player.id)
-        this.playersGamesStorage.add(this.id, player.id)
+        useGamesPlayersStore().add(this.id, player.id)
     }
 
     private fetchPlayers() {
         const playersStorage = usePlayersStore()
-        const playerIds = this.playersGamesStorage.filter(this.id)
+        const playerIds = useGamesPlayersStore().filter(this.id)
         return playersStorage.players.filter((p) => playerIds.find(({ game, player }) => p.id == player))
     }
 }

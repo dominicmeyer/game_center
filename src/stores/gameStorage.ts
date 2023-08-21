@@ -24,7 +24,7 @@ export const useGamesStore = defineStore('games', () => {
     const sort = () => _games.value = _games.value.sort((a, b) => b.id - a.id)
     const filter = (type: GameType) => _games.value.filter((g) => g.typeId == type.id)
     const add = (game: Game) => {
-        if (_games.value.find((g) => g.equals(game)) == null) {
+        if (_games.value.find((g) => g === game) == null) {
             _games.value.push(game)
             sort()
         }

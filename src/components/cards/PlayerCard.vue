@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import Button, { ButtonType } from '@/components/Button.vue';
-import { usePlayersStore } from '@/stores/playerStorage';
+import { playerNameAlert, usePlayersStore } from '@/stores/playerStorage';
 import { Player } from "@/types/player"
 import { ref } from 'vue';
 
@@ -49,6 +49,7 @@ const removePlayer = () => {
 const renamePlayer = () => {
     if (playerName.value != oldPlayerName.value) {
         if (!playersStorage.validate(playerName.value)) {
+            playerNameAlert(playerName.value)
             return
         }
         playersStorage.renamePlayer(oldPlayerName.value, playerName.value)
