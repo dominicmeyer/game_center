@@ -13,7 +13,11 @@ export const useGamesPlayersStore = defineStore('gamesPlayers', () => {
         loaded.value = true
     }
 
-    const filter = (gameId: number) => _playersGames.value.filter(({ game, player }) => gameId == game)
+    const filter = (gameId?: number, playerId?: number) => {
+        return _playersGames.value
+            .filter(({ game, player }) => gameId === null || gameId === game)
+            .filter(({ game, player }) => playerId === null || playerId === player)
+    }
     const add = (gameId: number, playerId: number) => {
         if (_playersGames.value.find(({ game, player }) => game == gameId && player == playerId) == null) {
             _playersGames.value.push({ game: gameId, player: playerId })

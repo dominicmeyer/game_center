@@ -35,9 +35,7 @@ export const usePlayersStore = defineStore("players", () => {
     }
     const validate = (name: string) => {
         const contains = findPlayer(name) != null
-        if (contains) {
-            alert(`Es gibt bereits einen Spieler/in mit dem Namen ${name}`)
-        }
+
         return !contains
     }
     const renamePlayer = (oldName: string, newName: string) => {
@@ -65,3 +63,7 @@ export const usePlayersStore = defineStore("players", () => {
         renamePlayer
     }
 })
+
+export const playerNameAlert = (name: string) => {
+    alert(`Es gibt bereits einen Spieler/in mit dem Namen ${name}`)
+}
