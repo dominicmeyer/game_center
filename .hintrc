@@ -4,6 +4,14 @@
   ],
   "hints": {
     "meta-viewport": "off",
-    "meta[name=color-scheme]": "off"
+    "meta[name=color-scheme]": "off",
+    "compat-api/html": [
+      "default",
+      {
+        "ignore": [
+          "meta[name=color-scheme]"
+        ]
+      }
+    ]
   }
 }

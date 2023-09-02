@@ -11,4 +11,16 @@ export default defineConfig({
       // implement node event listeners here
     },
   },
+
+  component: {
+    supportFile: "tests/component/support/component.{js,jsx,ts,tsx}",
+    specPattern: "tests/component/specs/**/*.cy.{js,jsx,ts,tsx}",
+    videosFolder: "tests/component/videos",
+    screenshotsFolder: "tests/component/screenshots",
+    indexHtmlFile: "tests/component/support/component-index.html",
+    devServer: {
+      framework: "vue",
+      bundler: "vite",
+    },
+  },
 });

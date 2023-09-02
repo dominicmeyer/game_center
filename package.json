@@ -7,8 +7,10 @@
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "test:e2e": "cypress run",
-    "test:unit": "vitest",
+    "test": "npm run test:e2e && npm run test:component && npm run test:unit",
+    "test:e2e": "npm run dev & cypress run",
+    "test:component": "cypress run --component",
+    "test:unit": "vitest run",
     "lint": "eslint"
   },
   "dependencies": {
