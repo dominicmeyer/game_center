@@ -14,6 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+import { createPinia, setActivePinia } from 'pinia'
 import './commands'
 
 // Alternatively you can use CommonJS syntax:
@@ -26,14 +27,18 @@ import { mount } from 'cypress/vue'
 // Alternatively, can be defined in cypress/support/component.d.ts
 // with a <reference path="./component" /> at the top of your spec.
 declare global {
-  namespace Cypress {
-    interface Chainable {
-      mount: typeof mount
+    namespace Cypress {
+        interface Chainable {
+            mount: typeof mount
+        }
     }
-  }
 }
 
 Cypress.Commands.add('mount', mount)
+
+beforeEach(() => {
+    setActivePinia(createPinia())
+})
 
 // Example use:
 // cy.mount(MyComponent)
