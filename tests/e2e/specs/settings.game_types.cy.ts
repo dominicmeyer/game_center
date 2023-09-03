@@ -1,5 +1,5 @@
-describe('template spec', () => {
+describe('game types', () => {
   it('passes', () => {
-    cy.visit('https://example.cypress.io')
+    cy.visit('settings/game_types')
   })
 })
